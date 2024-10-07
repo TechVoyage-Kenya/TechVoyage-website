@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '20.14'
-        
+
     - name: Cache node modules
       uses: actions/cache@v3
       with:
@@ -29,7 +29,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
-
     - name: Install dependencies
       run: npm install
 
@@ -37,8 +36,4 @@ jobs:
       run: npm run build
 
     - name: Deploy
-      run: npx gh-pages -d build --repo https://github.com/TechVoyage-Kenya/TechVoyage-website.git
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # This is automatically provided
-    
-    
+      run: npx gh-pages -d build --repo https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/TechVoyage-Kenya/TechVoyage-website.git
