@@ -8,9 +8,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write 
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -38,5 +35,13 @@ jobs:
     - name: Build project
       run: npm run build
 
+    # Set up generic user for commits
+    - name: Configure Git for deployment
+      run: |
+        git config --global user.email "ci-bot@yourdomain.com"
+        git config --global user.name "CI Bot"
+
     - name: Deploy
       run: npx gh-pages -d build --repo https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/TechVoyage-Kenya/TechVoyage-website.git
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
