@@ -1,0 +1,21 @@
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders the logo', () => {
+  render(<App />);
+  const logo = screen.getByAltText(/logo/i); // Find the image by the alt text "logo"
+  expect(logo).toBeInTheDocument(); // Ensure that the logo is in the DOM
+});
+
+test('renders the link with "Learn React" text', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i); // Find the link by its text
+  expect(linkElement).toBeInTheDocument(); // Ensure that the link is in the DOM
+  expect(linkElement).toHaveAttribute('href', 'https://reactjs.org'); // Ensure it has the correct href attribute
+});
+
+test('renders the text "Edit src/App.js and save to reload."', () => {
+  render(<App />);
+  const textElement = screen.getByText(/edit src\/App.js and save to reload./i);
+  expect(textElement).toBeInTheDocument(); // Ensure the text is in the DOM
+});
