@@ -1,12 +1,14 @@
-name: Test Workflow
+name: Test and Deploy Workflow
 
 on:
   push:
     branches:
       - dev
+      - main
   pull_request:
     branches:
       - dev
+      - main
 
 jobs:
   test:
@@ -34,3 +36,41 @@ jobs:
 
     - name: Run tests
       run: npm test -- --coverage
+
+  build-and-deploy:
+    needs: test  # This makes sure deploy runs only after the tests pass
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.14'
+
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build project
+      run: npm run build
+
+    # Set up generic user for commits
+    - name: Configure Git for deployment
+      run: |
+        git config --global user.email "ci-bot@yourdomain.com"
+        git config --global user.name "CI Bot"
+
+    - name: Deploy
+      run: npx gh-pages -d build --repo https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/TechVoyage-Kenya/TechVoyage-website.git
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
