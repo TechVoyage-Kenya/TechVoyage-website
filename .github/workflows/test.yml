@@ -40,6 +40,8 @@ jobs:
   build-and-deploy:
     needs: test  # This makes sure deploy runs only after the tests pass
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Ensure the token can write to the repo
 
     steps:
     - name: Checkout code
