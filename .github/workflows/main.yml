@@ -37,7 +37,7 @@ jobs:
       run: npm run build
 
     - name: Deploy
-      run: gh-pages -d build --repo https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/TechVoyage-Kenya/TechVoyage-website.git
+      run: npx gh-pages -d build --repo https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/TechVoyage-Kenya/TechVoyage-website.git
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
