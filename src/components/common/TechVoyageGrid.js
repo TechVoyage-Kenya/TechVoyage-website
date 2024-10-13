@@ -92,7 +92,7 @@ const SocialsBlock = () => (
     >
       <a
         href="mailto:techvoyage.kenya@gmail.com"
-        target="_blank" // Opens in a new tab
+        target="_blank" 
         rel="noopener noreferrer" // Security best practice
         className="grid h-full place-content-center text-3xl text-white"
       >
@@ -108,7 +108,7 @@ const SocialsBlock = () => (
     >
       <a
         href="https://github.com/TechVoyage-Kenya"
-        target="_blank" // Opens in a new tab
+        target="_blank" 
         rel="noopener noreferrer" // Security best practice
         className="grid h-full place-content-center text-3xl text-white"
       >
@@ -124,7 +124,7 @@ const SocialsBlock = () => (
     >
       <a
         href="https://linkedin.com/company/"
-        target="_blank" // Opens in a new tab
+        target="_blank" 
         rel="noopener noreferrer" // Security best practice
         className="grid h-full place-content-center text-3xl text-black"
       >
@@ -140,7 +140,7 @@ const SocialsBlock = () => (
     >
       <a
         href="https://wa.me/1234567890"
-        target="_blank" // Opens in a new tab
+        target="_blank" 
         rel="noopener noreferrer" // Security best practice
         className="grid h-full place-content-center text-3xl text-white"
       >

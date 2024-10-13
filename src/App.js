@@ -18,7 +18,7 @@ function App() {
     const tagName = e.target.tagName.toLowerCase();
     
     
-    // Ensure the click is not on a functional element (like button, input, etc.)
+    // Ensures the click is not on a functional element (like button, input, etc.)
     const nonFunctionalTags = ["button", "a", "input", "textarea", "select", "path", "svg"];
     if (!nonFunctionalTags.includes(tagName) && !e.target.classList.contains("exclude-theme-toggle")) {
       dispatch(switchTheme()); // Dispatch action to switch theme
@@ -45,7 +45,7 @@ function App() {
       }}
     >
       <div
-        className="min-h-screen font-mulish flex flex-col" // Changed min-w-screen to min-h-screen
+        className="min-h-screen font-mulish flex flex-col" 
         style={{
           color: theme.textColor,
           backgroundColor: theme.backgroundColor,

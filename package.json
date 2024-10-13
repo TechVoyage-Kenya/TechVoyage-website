@@ -2,6 +2,7 @@
   "name": "techvoyage",
   "version": "0.1.0",
   "private": true,
+  
   "homepage": "https://TechVoyage-Kenya.github.io/TechVoyage-website",
   "dependencies": {
     "@emotion/react": "^11.13.3",

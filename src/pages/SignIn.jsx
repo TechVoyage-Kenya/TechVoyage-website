@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 
-/* import { addUser } from '../redux/reducers/userSlice'; */
+
 import { useDispatch } from 'react-redux';
 
 
@@ -48,7 +48,7 @@ const SignInPage = () => {
       const data = await response.json();
       if (response.ok) {
         console.log('Login successful:', data);
-        // Store the token (data.token) in localStorage or state management
+       
       } else {
         setErrorMessage(data.message);
       }

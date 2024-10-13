@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { usePageTitle } from "../utils/usePageTitle";
 import { SiGmail } from "react-icons/si";
@@ -16,13 +16,28 @@ const ContactUs = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add form submission logic here, e.g., sending data to an email service or backend
+    
     alert("Thank you for your message! We will get back to you shortly.");
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    
+   
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div className="py-10">
-      <ContactUsCard />
+      {!isMobile && <ContactUsCard />}
       <motion.div
         variants={pageVariants}
         initial="initial"
@@ -126,7 +141,7 @@ const ContactUs = () => {
                 <SiGmail className="exclude-theme-toggle" /> <span className="exclude-theme-toggle">Email: techvoyage.kenya@gmail.com</span>
               </a>
               <p className="mt-2 exclude-theme-toggle">Follow us on our social media for the latest updates!</p>
-              {/* Add social media icons/links here if needed */}
+              
             </motion.div>
           </div>
         </div>

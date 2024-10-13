@@ -5,7 +5,7 @@ import { ShiftingDropDown } from "../common/shiftingDropdown";
 import { useSelector } from "react-redux";
 import logo from "../../assets/images/logo2.png";
 
-import { AiOutlineHome } from "react-icons/ai"; // Home icon
+import { AiOutlineHome } from "react-icons/ai"; 
 import { MdOutlineDesignServices, MdOutlineContactPage } from "react-icons/md";
 import { FaProjectDiagram, FaUsers } from "react-icons/fa";
 import { BsClipboardCheck } from "react-icons/bs";
@@ -154,7 +154,7 @@ const Navbar = () => {
           animate={{ opacity: 0.5 }}
           exit={{ opacity: 0 }}
           style={{ zIndex: 30 }}
-          onClick={toggleMenu} // Closes the menu when the overlay is clicked
+          onClick={toggleMenu} 
         ></motion.div>
       )}
 

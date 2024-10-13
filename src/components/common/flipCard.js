@@ -8,13 +8,7 @@ const spring = {
     damping: 40,
 };
 
-/**
- * 3D Flip
- * Created By Joshua Guo
- *
- * @framerSupportedLayoutWidth fixed
- * @framerSupportedLayoutHeight fixed
- */
+
 export default function withClick(Component) {
     return (props) => {
         const [isFlipped, setIsFlipped] = useState(false);
@@ -67,7 +61,7 @@ export default function withClick(Component) {
             >
                 <motion.div
                     ref={ref}
-                    whileHover={{ scale: 1.1 }} // Change the scale of zooming in when hovering
+                    whileHover={{ scale: 1.1 }} 
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseEnd}
                     transition={spring}

@@ -1,28 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider,createBrowserRouter} from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom'; 
 import { Provider } from 'react-redux';
 import './index.css';
 
-import { routes } from './routes';
+import { routes } from './routes'; 
 import reportWebVitals from './reportWebVitals';
 import { store } from './redux/store';
 
+// Function to convert routes array into <Route> components
+const renderRoutes = (routes) => {
+    return routes.map(({ path, element, errorElement, children }, index) => (
+        <Route key={index} path={path} element={element} errorElement={errorElement}>
+            {children && renderRoutes(children)} 
+        </Route>
+    ));
+};
 
-
-//To be removed when deploying to different server. Gh-pages scripts are also to be removed.
-const basename = "/TechVoyage-website";
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const router = createBrowserRouter(routes,{basename:basename})
 
-
+// Render the app using HashRouter
 root.render(
     <Provider store={store}>
-<RouterProvider router={router}/>
-</Provider>
+        <HashRouter>
+            <Routes>
+                {renderRoutes(routes)} 
+            </Routes>
+        </HashRouter>
+    </Provider>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Performance measuring code
 reportWebVitals();

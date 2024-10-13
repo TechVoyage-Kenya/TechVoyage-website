@@ -293,7 +293,7 @@ const AddCard = ({ column, dispatch }) => {
             color: "#FFFFFF", // Input text color
             "&::placeholder": {
               // Placeholder color
-              color: "#AAAAAA", // Change this to your desired placeholder color
+              color: "#AAAAAA", 
             },
           },
         },
