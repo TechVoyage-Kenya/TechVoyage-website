@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/TechVoyage-website/static/css/main.7c7ce969.css",
-    "main.js": "/TechVoyage-website/static/js/main.33a87fcb.js",
+    "main.js": "/TechVoyage-website/static/js/main.fe16af8a.js",
     "static/js/453.1ae4ff18.chunk.js": "/TechVoyage-website/static/js/453.1ae4ff18.chunk.js",
     "static/media/errorPageImage.jpg": "/TechVoyage-website/static/media/errorPageImage.1b5586f87bf740decaf1.jpg",
     "static/media/logo2.png": "/TechVoyage-website/static/media/logo2.a2b001767f5e9e629adc.png",
     "index.html": "/TechVoyage-website/index.html",
     "main.7c7ce969.css.map": "/TechVoyage-website/static/css/main.7c7ce969.css.map",
-    "main.33a87fcb.js.map": "/TechVoyage-website/static/js/main.33a87fcb.js.map",
+    "main.fe16af8a.js.map": "/TechVoyage-website/static/js/main.fe16af8a.js.map",
     "453.1ae4ff18.chunk.js.map": "/TechVoyage-website/static/js/453.1ae4ff18.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.7c7ce969.css",
-    "static/js/main.33a87fcb.js"
+    "static/js/main.fe16af8a.js"
   ]
 }
