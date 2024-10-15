@@ -7,6 +7,7 @@ import OurTeamPage from "./pages/OurTeam";
 import Projects from "./pages/Projects";
 import ContactUs from "./pages/ContactUs";
 import SignInPage from "./pages/SignIn";
+import ProtectedRoute from "./components/layout/protectedRoutes";
 
 const routes = [
     { path: "/", 
@@ -16,7 +17,7 @@ const routes = [
             {path:"/",element:<LandingPage/>},
             {
                 path:"/tasksBoard",
-                element:<TasksBoard/>
+                element: <ProtectedRoute element={<TasksBoard />} />,
             },
             {
                 path:"/ourServices",

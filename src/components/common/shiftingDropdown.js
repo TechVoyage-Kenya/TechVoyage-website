@@ -1,15 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { FiArrowRight, FiChevronDown } from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { deleteUser } from "../../redux/reducers/userSlice";
 
 export const ShiftingDropDown = () => {
+  const user = useSelector((state) => state.user.value);
   return (
     <div className="flex w-[90%] justify-start md:justify-center exclude-theme-toggle">
       <Tabs />
       <ContactButton />
+      {user.email && <LogoutButton />}
     </div>
+  );
+};
+const LogoutButton = () => {
+  const navigate = useNavigate();
+  const dispatch =useDispatch()
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token from local storage
+
+    navigate("/"); // Navigate to the login page or another page
+    dispatch(deleteUser())
+  };
+
+  const theme = useSelector((state) => state.colorTheme.value);
+  const location = useLocation();
+  let currentLocation = location.pathname;
+
+  return (
+    <button
+      onClick={handleLogout}
+      className="ml-4 flex items-center gap-1 text-md hover:font-bold "
+      style={{
+        color:
+          theme.navTextColor && currentLocation === "/"
+            ? theme.navTextColor
+            : theme.textColor,
+        transition: "background-color 0.5s ease, color 0.5s ease",
+      }}
+    >
+      <span>Logout</span>
+    </button>
   );
 };
 
@@ -17,6 +51,7 @@ const Tabs = () => {
   const [selected, setSelected] = useState(null);
   const [dir, setDir] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null); // State to store timeout ID
+  const user = useSelector((state)=>state.user.value)
 
   const handleSetSelected = (val) => {
     if (typeof selected === "number" && typeof val === "number") {
@@ -24,7 +59,7 @@ const Tabs = () => {
     } else if (val === null) {
       setDir(null);
     }
-    
+
     // Clear any existing timeout
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -42,16 +77,49 @@ const Tabs = () => {
     setTimeoutId(id);
   };
 
+  const TABS = [
+    {
+      id: 1,
+      title: "Services",
+      Component: Services,
+      link: "/ourServices",
+    },
+    {
+      id: 2,
+      title: "Projects",
+      Component: Projects,
+      link: "/projects",
+    },
+    {
+      id: 3,
+      title: "Our Team",
+      Component: Team,
+      link: "/ourTeam",
+    },
+    ...(user.email ? [{
+      id: 4,
+      title: "Tasks Board",
+      Component: Taskboard,
+      link: "/tasksBoard",
+    }] : []),
+  ];
+
   return (
     <div onMouseLeave={handleMouseLeave} className="relative flex h-fit gap-2">
       {TABS.map((t) => (
-        <Tab key={t.id} selected={selected} handleSetSelected={handleSetSelected} tab={t.id} link={t.link}>
+        <Tab
+          key={t.id}
+          selected={selected}
+          handleSetSelected={handleSetSelected}
+          tab={t.id}
+          link={t.link}
+        >
           {t.title}
         </Tab>
       ))}
       <AnimatePresence>
         {selected && (
-          <div 
+          <div
             onMouseEnter={() => clearTimeout(timeoutId)} // Clear timeout when hovering over content
             onMouseLeave={handleMouseLeave} // Ensure it closes when mouse leaves
           >
@@ -63,20 +131,20 @@ const Tabs = () => {
   );
 };
 
-const Tab = ({ children, tab, handleSetSelected, selected,link }) => {
+const Tab = ({ children, tab, handleSetSelected, selected, link }) => {
   const theme = useSelector((state) => state.colorTheme.value);
   const [isNavbarAtTop, setIsNavbarAtTop] = useState(true);
-  const location = useLocation()
-  const navigate = useNavigate()
-  let currentLocation = location.pathname
+  const location = useLocation();
+  const navigate = useNavigate();
+  let currentLocation = location.pathname;
 
   useEffect(() => {
     const handleScroll = () => {
       setIsNavbarAtTop(window.scrollY === 0);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -84,23 +152,71 @@ const Tab = ({ children, tab, handleSetSelected, selected,link }) => {
       id={`shift-tab-${tab}`}
       onMouseEnter={() => handleSetSelected(tab)}
       className={`flex items-center gap-1 rounded-full px-3 text-md font-bold ${
-        selected === tab ? `bg-[${theme.backgroundColor}] text-[${theme.textColor}]` : ''
+        selected === tab
+          ? `bg-[${theme.backgroundColor}] text-[${theme.textColor}]`
+          : ""
       }`}
       style={{
-        fontWeight: selected === tab ? 'bold' : 'normal',
-        
+        fontWeight: selected === tab ? "bold" : "normal",
       }}
     >
-      <span className="exclude-theme-toggle" 
-      
-      style={{ color: theme.navTextColor && isNavbarAtTop && currentLocation==="/" ? theme.navTextColor : theme.textColor,transition: "background-color 0.5s ease, color 0.5s ease",  }} onClick={()=>navigate(link)} >{children}</span>
-      <FiChevronDown className={`transition-transform ${selected === tab ? 'rotate-180' : ''}`} style={{ color: theme.navTextColor && isNavbarAtTop && currentLocation==="/" ? theme.navTextColor : theme.textColor,transition: "background-color 0.5s ease, color 0.5s ease",  }} />
+      <span
+        className="exclude-theme-toggle"
+        style={{
+          color:
+            theme.navTextColor && isNavbarAtTop && currentLocation === "/"
+              ? theme.navTextColor
+              : theme.textColor,
+          transition: "background-color 0.5s ease, color 0.5s ease",
+        }}
+        onClick={() => navigate(link)}
+      >
+        {children}
+      </span>
+      <FiChevronDown
+        className={`transition-transform ${
+          selected === tab ? "rotate-180" : ""
+        }`}
+        style={{
+          color:
+            theme.navTextColor && isNavbarAtTop && currentLocation === "/"
+              ? theme.navTextColor
+              : theme.textColor,
+          transition: "background-color 0.5s ease, color 0.5s ease",
+        }}
+      />
     </button>
   );
 };
 
-
 const Content = ({ selected, dir }) => {
+  const user = useSelector((state)=>state.user.value)
+  const TABS = [
+    {
+      id: 1,
+      title: "Services",
+      Component: Services,
+      link: "/ourServices",
+    },
+    {
+      id: 2,
+      title: "Projects",
+      Component: Projects,
+      link: "/projects",
+    },
+    {
+      id: 3,
+      title: "Our Team",
+      Component: Team,
+      link: "/ourTeam",
+    },
+    ...(user.email ? [{
+      id: 4,
+      title: "Tasks Board",
+      Component: Taskboard,
+      link: "/tasksBoard",
+    }] : []),
+  ];
   return (
     <motion.div
       id="overlay-content"
@@ -171,33 +287,48 @@ const Nub = ({ selected }) => {
 
 const ContactButton = () => {
   const navigate = useNavigate();
-  const theme = useSelector((state)=>state.colorTheme.value)
-  const location = useLocation()
-  let currentLocation = location.pathname
+  const theme = useSelector((state) => state.colorTheme.value);
+  const location = useLocation();
+  let currentLocation = location.pathname;
   return (
     <button
       className="ml-4 flex items-center gap-1 text-md hover:font-bold"
       onClick={() => navigate("/contactUs")}
-      style={{color:theme.navTextColor && currentLocation ==="/"?theme.navTextColor:theme.textColor,transition: "background-color 0.5s ease, color 0.5s ease", }}
+      style={{
+        color:
+          theme.navTextColor && currentLocation === "/"
+            ? theme.navTextColor
+            : theme.textColor,
+        transition: "background-color 0.5s ease, color 0.5s ease",
+      }}
     >
       <span className="exclude-theme-toggle">Contact Us</span>
-     
     </button>
   );
 };
 
 const Services = () => {
   const theme = useSelector((state) => state.colorTheme.value);
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   return (
     <div>
-      <h3 className="mb-2 text-lg font-medium" style={{color: theme.navTextColor ? theme.navTextColor : theme.textColor}}>
+      <h3
+        className="mb-2 text-lg font-medium"
+        style={{
+          color: theme.navTextColor ? theme.navTextColor : theme.textColor,
+        }}
+      >
         Our Web Solutions
       </h3>
       <div className="flex gap-4">
         <div>
-          <h4 className="mb-2 text-sm font-medium exclude-theme-toggle" style={{color: theme.navTextColor ? theme.navTextColor : theme.textColor}}>
+          <h4
+            className="mb-2 text-sm font-medium exclude-theme-toggle"
+            style={{
+              color: theme.navTextColor ? theme.navTextColor : theme.textColor,
+            }}
+          >
             Website Development
           </h4>
           <span className="mb-1 block text-sm text-neutral-400 exclude-theme-toggle">
@@ -208,7 +339,12 @@ const Services = () => {
           </span>
         </div>
         <div>
-          <h4 className="mb-2 text-sm font-medium exclude-theme-toggle" style={{color: theme.navTextColor ? theme.navTextColor : theme.textColor}}>
+          <h4
+            className="mb-2 text-sm font-medium exclude-theme-toggle"
+            style={{
+              color: theme.navTextColor ? theme.navTextColor : theme.textColor,
+            }}
+          >
             Web Design
           </h4>
           <span className="mb-1 block text-sm text-neutral-400 exclude-theme-toggle">
@@ -219,7 +355,12 @@ const Services = () => {
           </span>
         </div>
         <div>
-          <h4 className="mb-2 text-sm font-medium exclude-theme-toggle" style={{color: theme.navTextColor ? theme.navTextColor : theme.textColor}}>
+          <h4
+            className="mb-2 text-sm font-medium exclude-theme-toggle"
+            style={{
+              color: theme.navTextColor ? theme.navTextColor : theme.textColor,
+            }}
+          >
             Content Management
           </h4>
           <span className="mb-1 block text-sm text-neutral-400 exclude-theme-toggle">
@@ -232,25 +373,40 @@ const Services = () => {
       </div>
 
       <button className="ml-auto mt-4 flex items-center gap-1 text-sm text-indigo-300 hover:font-bold">
-        <span className="exclude-theme-toggle" onClick={()=>navigate("/ourServices")}>Discover More</span>
+        <span
+          className="exclude-theme-toggle"
+          onClick={() => navigate("/ourServices")}
+        >
+          Discover More
+        </span>
         <FiArrowRight />
       </button>
     </div>
   );
 };
 
-
 const Team = () => {
-  const theme = useSelector((state)=>state.colorTheme.value)
-  const navigate = useNavigate()
+  const theme = useSelector((state) => state.colorTheme.value);
+  const navigate = useNavigate();
   return (
     <div>
-      <h3 className="mb-2 text-lg font-medium exclude-theme-toggle" style={{color:theme.navTextColor?theme.navTextColor:theme.textColor}}>Our Team</h3>
+      <h3
+        className="mb-2 text-lg font-medium exclude-theme-toggle"
+        style={{
+          color: theme.navTextColor ? theme.navTextColor : theme.textColor,
+        }}
+      >
+        Our Team
+      </h3>
       <p className="text-sm text-neutral-400 mb-4 exclude-theme-toggle">
-      Get to know the professionals who drive our vision and bring ideas to life. 
+        Get to know the professionals who drive our vision and bring ideas to
+        life.
       </p>
 
-      <button className= "ml-auto mt-4 flex items-center gap-1 text-sm text-indigo-300 hover:font-bold exclude-theme-toggle" onClick={()=>navigate("/ourTeam")}>
+      <button
+        className="ml-auto mt-4 flex items-center gap-1 text-sm text-indigo-300 hover:font-bold exclude-theme-toggle"
+        onClick={() => navigate("/ourTeam")}
+      >
         <span className="exclude-theme-toggle">View more</span>
         <FiArrowRight />
       </button>
@@ -258,40 +414,58 @@ const Team = () => {
   );
 };
 
+
 const Taskboard = () => {
   const navigate = useNavigate();
-  const theme = useSelector((state)=>state.colorTheme.value)
+  const theme = useSelector((state) => state.colorTheme.value);
+  const tasks = useSelector((state) => state.tasks.value);
+  
+  // Group tasks by column
+  const groupedTasks = tasks.reduce((acc, task) => {
+    acc[task.column] = acc[task.column] || [];
+    acc[task.column].push(task);
+    return acc;
+  }, {});
+
+
+  const maxTasksToShow = 2;
+
   return (
     <div>
-      <h3 className="mb-2 text-lg font-medium" style={{color:theme.navTextColor?theme.navTextColor:theme.textColor}}>Taskboard</h3>
+      <h3
+        className="mb-2 text-lg font-medium"
+        style={{
+          color: theme.navTextColor ? theme.navTextColor : theme.textColor,
+        }}
+      >
+        Taskboard
+      </h3>
       <div className="flex gap-4">
-        <div>
-          <h3 className="mb-2 text-sm font-medium exclude-theme-toggle" style={{color:theme.navTextColor?theme.navTextColor:theme.textColor}}>In Progress</h3>
-          <span className="mb-1 block text-sm text-neutral-400 exclude-theme-toggle">
-            Build New Features
-          </span>
-          <span className="mb-1 block text-sm text-neutral-400 exclude-theme-toggle">
-            Fix Bugs
-          </span>
-        </div>
-        <div>
-          <h3 className="mb-2 text-sm font-medium exclude-theme-toggle" style={{color:theme.navTextColor?theme.navTextColor:theme.textColor}}>Upcoming Tasks</h3>
-          <span className="mb-1 block text-sm text-neutral-400 exclude-theme-toggle">
-            Launch Marketing Campaign
-          </span>
-          <span className="block text-sm text-neutral-400 exclude-theme-toggle">
-            User Testing
-          </span>
-        </div>
-        <div>
-          <h3 className="mb-2 text-sm font-medium" style={{color:theme.navTextColor?theme.navTextColor:theme.textColor}}>Completed</h3>
-          <span className="mb-1 block text-sm text-neutral-400 exclude-theme-toggle">
-            Release Version 1.0
-          </span>
-          <span className="block text-sm text-neutral-400 exclude-theme-toggle">
-            Update Documentation
-          </span>
-        </div>
+        {Object.keys(groupedTasks).map((column) => (
+          <div key={column}>
+            <h3
+              className="mb-2 text-sm font-medium exclude-theme-toggle"
+              style={{
+                color: theme.navTextColor ? theme.navTextColor : theme.textColor,
+              }}
+            >
+              {column.charAt(0).toUpperCase() + column.slice(1)} 
+            </h3>
+            {groupedTasks[column].slice(0, maxTasksToShow).map((task) => (
+              <span
+                key={task.id}
+                className="mb-1 block text-sm text-neutral-400 exclude-theme-toggle"
+              >
+                {task.title}  {new Date(task.dueDate).toLocaleDateString()}
+              </span>
+            ))}
+            {groupedTasks[column].length > maxTasksToShow && (
+              <span className="block text-sm text-neutral-400 exclude-theme-toggle">
+                + {groupedTasks[column].length - maxTasksToShow} more
+              </span>
+            )}
+          </div>
+        ))}
       </div>
 
       <button
@@ -304,47 +478,66 @@ const Taskboard = () => {
     </div>
   );
 };
+
+
+
 const Projects = () => {
-  const theme = useSelector((state)=>state.colorTheme.value)
-  const navigate = useNavigate()
-  const projectsData = [
+  const theme = useSelector((state) => state.colorTheme.value);
+  const navigate = useNavigate();
+ 
+  const projectsData = useSelector((state) => state.projects.projects.slice(1, 3))
+
+  
+
+/*   const projectsData = [
     {
       id: 1,
       title: "E-commerce Platform",
       description: "A robust online store with integrated payment solutions.",
-      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQTTWSKuyABvcflwHBH6ckXxv_Z57PiXQBTQ&s",
+      imageUrl:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQTTWSKuyABvcflwHBH6ckXxv_Z57PiXQBTQ&s",
       category: "E-commerce",
     },
     {
       id: 2,
       title: "Portfolio Website",
       description: "A sleek, modern portfolio for a creative professional.",
-      imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/videograph-free-template-353x278.jpg",
+      imageUrl:
+        "https://colorlib.com/wp/wp-content/uploads/sites/2/videograph-free-template-353x278.jpg",
       category: "Web Design",
     },
+  ]; */
 
-  ];
-  
   return (
     <div>
       <div className="grid grid-cols-2 gap-2">
-        {projectsData.map((project)=>(
+        {projectsData.map((project) => (
           <span>
-          <img
-            className="mb-2 h-14 w-full rounded object-cover exclude-theme-toggle"
-            src={project.imageUrl}
-            alt={project.title}
-          />
-          <h4 className="mb-0.5 text-sm font-medium exclude-theme-toggle" style={{color:theme.navTextColor?theme.navTextColor:theme.textColor}}>{project.title}</h4>
-          <p className="text-xs text-neutral-400 exclude-theme-toggle">
-            {project.description}
-          </p>
-        </span>
-
+            <img
+              className="mb-2 h-14 w-full rounded object-cover exclude-theme-toggle"
+              src={project.imageurl}
+              alt={project.title}
+            />
+            <h4
+              className="mb-0.5 text-sm font-medium exclude-theme-toggle"
+              style={{
+                color: theme.navTextColor
+                  ? theme.navTextColor
+                  : theme.textColor,
+              }}
+            >
+              {project.title}
+            </h4>
+            <p className="text-xs text-neutral-400 exclude-theme-toggle">
+              {project.description}
+            </p>
+          </span>
         ))}
-      
       </div>
-      <button className="ml-auto mt-4 flex items-center gap-1 text-sm text-indigo-300 hover:font-bold" onClick={()=>navigate("/projects")}>
+      <button
+        className="ml-auto mt-4 flex items-center gap-1 text-sm text-indigo-300 hover:font-bold"
+        onClick={() => navigate("/projects")}
+      >
         <span className="exclude-theme-toggle">View all projects</span>
         <FiArrowRight />
       </button>
@@ -352,31 +545,6 @@ const Projects = () => {
   );
 };
 
-const TABS = [
-  {
-    id: 1,
-    title: "Services",
-    Component: Services,
-    link:"/ourServices"
-  },
-  {
-    id:2,
-    title: "Projects",
-    Component: Projects,
-    link:"/projects"
-  },
-  {
-    id: 3,
-    title: "Our Team",
-    Component: Team,
-    link:"/ourTeam"
-  },
-  {
-    id: 4,
-    title: "Tasks Board",
-    Component: Taskboard,
-    link:"/tasksBoard"
-  },
-];
+
 
 export default ShiftingDropDown;

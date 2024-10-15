@@ -11,8 +11,7 @@ import TextField from "@mui/material/TextField";
 import ButtonNoBackground from "../components/common/Button-noBackground";
 import { usePageTitle } from "../utils/usePageTitle";
 import { useDispatch, useSelector } from "react-redux";
-import { addTask,deleteTask } from "../redux/reducers/tasksSlice";
-
+import { addTask, deleteTask } from "../redux/reducers/tasksSlice";
 
 const pageVariants = {
   initial: { opacity: 0, y: 50 },
@@ -21,19 +20,20 @@ const pageVariants = {
 };
 
 export const TasksBoard = () => {
-  usePageTitle("TechVoyage | Tasks Board")
-  
+  usePageTitle("TechVoyage | Tasks Board");
+
   return (
     <div className=" w-full pt-5">
-       <motion.div
+      <motion.div
         variants={pageVariants}
         initial="initial"
         animate="animate"
         exit="exit"
         transition={{ duration: 0.5 }}
       >
-       
-        <h1 className="pt-28 pl-12 text-4xl font-bold pb-2 text-center">Tasks Board</h1>
+        <h1 className="pt-28 pl-12 text-4xl font-bold pb-2 text-center">
+          Tasks Board
+        </h1>
         <Board />
       </motion.div>
     </div>
@@ -41,9 +41,10 @@ export const TasksBoard = () => {
 };
 
 const Board = () => {
-  const cards = useSelector((state)=>state.tasks.value)
-  const dispatch = useDispatch()
- 
+  const dispatch = useDispatch();
+
+  const cards = useSelector((state) => state.tasks?.value);
+
   return (
     <div className="flex h-full max-h-screen overflow-x-auto w-full gap-3 pl-12 pr-12 pb-12">
       <Column
@@ -82,15 +83,12 @@ const Column = ({ title, headingColor, cards, column, dispatch }) => {
   const [active, setActive] = useState(false);
 
   const handleDragStart = (e, card) => {
-  
-    
     e.dataTransfer.setData("cardId", card.id);
   };
 
   const handleDragEnd = (e) => {
-    const cardId = e.dataTransfer.getData("cardId");
-   
-    
+    const cardId = Number(e.dataTransfer.getData("cardId"));
+    console.log(cardId, typeof cardId);
 
     setActive(false);
     clearHighlights();
@@ -104,6 +102,8 @@ const Column = ({ title, headingColor, cards, column, dispatch }) => {
       let copy = [...cards];
 
       let cardToTransfer = copy.find((c) => c.id === cardId);
+      console.log(cardToTransfer);
+
       if (!cardToTransfer) return;
       cardToTransfer = { ...cardToTransfer, column };
 
@@ -112,16 +112,45 @@ const Column = ({ title, headingColor, cards, column, dispatch }) => {
       const moveToBack = before === "-1";
 
       if (moveToBack) {
+        console.log("hello");
+        console.log(cardToTransfer);
+
         copy.push(cardToTransfer);
+        console.log(copy);
       } else {
-        const insertAtIndex = copy.findIndex((el) => el.id === before);
+        console.log("here");
+
+        const insertAtIndex = copy.findIndex((el) => {
+          return el.id === before;
+        });
         if (insertAtIndex === undefined) return;
 
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
-     
 
-      dispatch(addTask(copy));
+      console.log(copy);
+
+      fetch("https://tech-voyage-express-js.vercel.app/api/tasks/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ tasks: copy }),
+      })
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            return console.error("Error ");
+          }
+        })
+        .then((data) => {
+          dispatch(addTask(data?.tasks));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
@@ -224,7 +253,9 @@ const Card = ({ title, id, column, handleDragStart, assignedTo, dueDate }) => {
       >
         <p className="text-lg text-neutral-100">{title}</p>
         <p className="text-md text-text">Assigned to: {assignedTo}</p>
-        <p className="text-md text-text">Due: {dueDate}</p>
+        <p className="text-md text-text">
+          Due: {new Date(dueDate).toLocaleDateString()}
+        </p>
       </motion.div>
     </>
   );
@@ -255,9 +286,18 @@ const BurnBarrel = ({ dispatch }) => {
   const handleDragEnd = (e) => {
     const cardId = e.dataTransfer.getData("cardId");
 
-   dispatch(deleteTask(cardId))
+    fetch(`https://tech-voyage-express-js.vercel.app/api/tasks/${cardId}`, {
+      method: "DELETE",
+    })
+      .then(() => {
+        console.log(cardId);
 
-    setActive(false);
+        dispatch(deleteTask(cardId));
+        setActive(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -293,7 +333,7 @@ const AddCard = ({ column, dispatch }) => {
             color: "#FFFFFF", // Input text color
             "&::placeholder": {
               // Placeholder color
-              color: "#AAAAAA", 
+              color: "#AAAAAA",
             },
           },
         },
@@ -347,7 +387,6 @@ const AddCard = ({ column, dispatch }) => {
         },
       },
       MuiSvgIcon: {
-        // Add this section
         styleOverrides: {
           root: {
             color: "#C4E7F3", // Set default color for all icons
@@ -360,7 +399,7 @@ const AddCard = ({ column, dispatch }) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
   const [assignedTo, setAssignedTo] = useState(""); // New state for assigned user
-
+  const members = useSelector((state) => state.profiles.profiles);
   const [dueDate, setDueDate] = React.useState(dayjs("2022-04-17"));
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -370,14 +409,35 @@ const AddCard = ({ column, dispatch }) => {
     const newCard = {
       column,
       title: text.trim(),
-      id: Math.random().toString(),
+
       assignedTo,
       dueDate: dueDate.format("YYYY-MM-DD"), // Include due date
     };
 
-    dispatch((addTask(newCard)))
+    fetch(`https://tech-voyage-express-js.vercel.app/api/tasks/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(newCard),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          console.error("Error adding task");
+        }
+      })
+      .then((data) => {
+        console.log(data.data);
 
-    setAdding(false);
+        dispatch(addTask(data?.data));
+        setAdding(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -390,13 +450,26 @@ const AddCard = ({ column, dispatch }) => {
             placeholder="Add new task..."
             className="w-full rounded border border-accent1 bg-accent1/20 p-3 text-md focus:outline-0"
           />
-          <input
-            type="text"
-            placeholder="Assign to..."
+
+          <select
             value={assignedTo}
             onChange={(e) => setAssignedTo(e.target.value)}
             className="w-full rounded border border-accent1 bg-accent1/20 p-3 text-md focus:outline-0"
-          />
+          >
+            <option value="" disabled>
+              Select a member...
+            </option>
+            {members.map((member) => (
+              <option
+                key={member.user_id}
+                value={member.user_id}
+                className="text-black"
+              >
+                {member.full_name}
+              </option>
+            ))}
+          </select>
+
           <div className="w-full rounded border border-accent1 bg-accent1/20 text-md text-text placeholder-text/40 focus:outline-0 exclude-theme-toggle">
             <ThemeProvider theme={theme}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -408,7 +481,6 @@ const AddCard = ({ column, dispatch }) => {
                       {...params}
                       className="w-full rounded border border-accent1 bg-accent1/20 p-3 focus:outline-0"
                       placeholder="Select a date"
-                     
                     />
                   )}
                 />
@@ -417,13 +489,14 @@ const AddCard = ({ column, dispatch }) => {
           </div>
 
           <div className="mt-1.5 flex items-center justify-end gap-1.5">
-          
-            <ButtonNoBackground text="Close" clickAction={()=>setAdding(false)}/>
+            <ButtonNoBackground
+              text="Close"
+              clickAction={() => setAdding(false)}
+            />
             <button
               type="submit"
               className="flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-md text-neutral-950 transition-colors hover:bg-secondary"
             >
-             
               Add
               <FiPlus />
             </button>
@@ -435,7 +508,7 @@ const AddCard = ({ column, dispatch }) => {
           onClick={() => setAdding(true)}
           className="flex w-full items-center gap-1.5 px-3 py-1.5 text-md hover:font-bold transition-colors"
         >
-        Add card
+          Add card
           <FiPlus />
         </motion.button>
       )}

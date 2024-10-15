@@ -15,7 +15,7 @@ const DrawOutlineButton = ({ children,clickAction, ...rest }) => {
       className="px-3 py-1.5 text-md text-neutral-400 group relative  font-medium transition-colors duration-[400ms] hover:font-bold"
       onClick={clickAction}
     >
-      <button className="font-bold">{children} </button>
+      <span className="font-bold exclude-theme-toggle">{children} </span>
 
       {/* TOP */}
       <span className="absolute left-0 top-0 h-[2px] w-0 bg-indigo-300 transition-all duration-100 group-hover:w-full" />

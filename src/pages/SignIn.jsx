@@ -5,6 +5,7 @@ import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 
 
 import { useDispatch } from 'react-redux';
+import { addUser } from '../redux/reducers/userSlice';
 
 
 const SignInPage = () => {
@@ -12,7 +13,7 @@ const SignInPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const dispatch = useDispatch()
 
   // Animation variants
@@ -37,7 +38,7 @@ const SignInPage = () => {
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("https://tech-voyage-express-js.vercel.app/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,7 +48,10 @@ const SignInPage = () => {
   
       const data = await response.json();
       if (response.ok) {
-        console.log('Login successful:', data);
+        dispatch(addUser(data?.user))
+        localStorage.setItem('token', data.token);
+        navigate("/")
+
        
       } else {
         setErrorMessage(data.message);
@@ -84,7 +88,7 @@ const SignInPage = () => {
         )}
 
         <motion.form
-          className="space-y-6 exclude-theme-toggle"
+          className="space-y-6 exclude-theme-toggle min-h-52"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
@@ -116,16 +120,14 @@ const SignInPage = () => {
             variants={buttonVariants}
             whileHover="hover"
             onClick={handleSignIn}
-            disabled={isSubmitting}
+           
           >
-            {isSubmitting ? (
-              <div className="loader"></div>
-            ) : (
+          
               <>
                 <FiLogIn className="text-lg exclude-theme-toggle" />
                 <span>Sign In</span>
               </>
-            )}
+          
           </motion.button>
 
         

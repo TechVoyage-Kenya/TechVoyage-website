@@ -16,7 +16,7 @@ const ContactUs = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     alert("Thank you for your message! We will get back to you shortly.");
   };
 
@@ -28,8 +28,7 @@ const ContactUs = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    
-   
+
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -60,7 +59,9 @@ const ContactUs = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7 }}
           >
-            We’d love to hear from you! Whether you have questions, need a quote, or want to discuss your project, please fill out the form below to get in touch with us.
+            We’d love to hear from you! Whether you have questions, need a
+            quote, or want to discuss your project, please fill out the form
+            below to get in touch with us.
           </motion.p>
 
           <div className="flex flex-col items-center p-2 lg:p-0">
@@ -94,7 +95,7 @@ const ContactUs = () => {
                 <input
                   type="tel"
                   className="border border-border rounded-lg p-2 w-full bg-background text-text"
-                  placeholder="Your Phone Number (Optional)"
+                  placeholder="Your Phone Number"
                 />
               </div>
               <div className="mb-4">
@@ -118,13 +119,22 @@ const ContactUs = () => {
                   required
                 ></textarea>
               </div>
-              <motion.button
-                type="submit"
-                className="bg-accent1 text-white px-4 py-2 rounded hover:bg-hover transition duration-300"
-                whileHover={{ scale: 1.05 }}
-              >
-                Send Message
-              </motion.button>
+              <div className="flex justify-center items-center gap-5">
+                <motion.button
+                  type="submit"
+                  className="bg-accent1 text-white px-4 py-2 rounded hover:bg-hover transition duration-300"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  Send Message
+                </motion.button>
+                <motion.button
+                  type="submit"
+                  className="bg-accent2 text-white px-4 py-2 rounded hover:bg-hover transition duration-300"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  Book a call
+                </motion.button>
+              </div>
             </motion.form>
 
             <motion.div
@@ -134,14 +144,25 @@ const ContactUs = () => {
               transition={{ duration: 0.7 }}
             >
               <h2 className="text-2xl font-bold mb-4">Get In Touch</h2>
-              <a href="tel:123456789" className="p-3 flex justify-center items-center gap-2">
-                <IoMdCall className="exclude-theme-toggle"/> Phone: (123) 456-7890
+              <a
+                href="tel:123456789"
+                className="p-3 flex justify-center items-center gap-2"
+              >
+                <IoMdCall className="exclude-theme-toggle" /> Phone: (123)
+                456-7890
               </a>
-              <a href="mailto:techvoyage.kenya@gmail.com" className="flex flex-row justify-center items-center gap-2 ">
-                <SiGmail className="exclude-theme-toggle" /> <span className="exclude-theme-toggle">Email: techvoyage.kenya@gmail.com</span>
+              <a
+                href="mailto:techvoyage.kenya@gmail.com"
+                className="flex flex-row justify-center items-center gap-2 "
+              >
+                <SiGmail className="exclude-theme-toggle" />{" "}
+                <span className="exclude-theme-toggle">
+                  Email: techvoyage.kenya@gmail.com
+                </span>
               </a>
-              <p className="mt-2 exclude-theme-toggle">Follow us on our social media for the latest updates!</p>
-              
+              <p className="mt-2 exclude-theme-toggle">
+                Follow us on our social media for the latest updates!
+              </p>
             </motion.div>
           </div>
         </div>

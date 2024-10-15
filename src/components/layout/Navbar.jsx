@@ -2,20 +2,43 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShiftingDropDown } from "../common/shiftingDropdown";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import logo from "../../assets/images/logo2.png";
 
 import { AiOutlineHome } from "react-icons/ai"; 
 import { MdOutlineDesignServices, MdOutlineContactPage } from "react-icons/md";
 import { FaProjectDiagram, FaUsers } from "react-icons/fa";
 import { BsClipboardCheck } from "react-icons/bs";
+import { AiOutlineLogout } from "react-icons/ai";
+import { deleteUser } from "../../redux/reducers/userSlice";
 
 const Navbar = () => {
   const theme = useSelector((state) => state.colorTheme.value);
   const [isOpen, setIsOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
   const [isScrolled, setIsScrolled] = useState(false);
+  const user = useSelector((state)=>state.user.value)
+  const [loggedIn,setLoggedIn] = useState(false)
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    dispatch(deleteUser()); // Dispatch the logout action
+    navigate("/"); // Navigate to login or home page
+  };
+
+  useEffect(() => {
+    console.log('User:', user); // Log the user state to see what it contains
+    if (user && user.email) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, [user]);
+  
+  console.log(loggedIn);
+  
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,14 +68,16 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  
   const navLinks = [
     { name: "Home", path: "/", icon: <AiOutlineHome /> },
     { name: "Services", path: "/ourServices", icon: <MdOutlineDesignServices /> },
     { name: "Projects", path: "/projects", icon: <FaProjectDiagram /> },
     { name: "Our Team", path: "/ourTeam", icon: <FaUsers /> },
-    { name: "Tasks Board", path: "/tasksBoard", icon: <BsClipboardCheck /> },
+    ...(user.email ? [{ name: "Tasks Board", path: "/tasksBoard", icon: <BsClipboardCheck /> }] : []),
     { name: "Contact Us", path: "/contactUs", icon: <MdOutlineContactPage /> },
   ];
+  
 
   const menuVariants = {
     open: {
@@ -92,6 +117,9 @@ const Navbar = () => {
 
   const location = useLocation();
   let currentLocation = location.pathname;
+ 
+  
+
 
   return (
     <nav
@@ -188,7 +216,17 @@ const Navbar = () => {
               <span className="exclude-theme-toggle">{link.name}</span>
             </Link>
           </motion.li>
+          
+
+          
         ))}
+        {loggedIn && <motion.li
+          className="p-4 cursor-pointer flex items-center space-x-2 exclude-theme-toggle"
+          onClick={handleLogout} // Add onClick event for logout
+        >
+          <AiOutlineLogout className="text-lg" />
+          <span className="exclude-theme-toggle">Logout</span>
+        </motion.li>}
       </motion.ul>
     </nav>
   );
