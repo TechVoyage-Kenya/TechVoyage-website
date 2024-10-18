@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { FiLinkedin, FiTwitter, FiGithub, FiArrowDownRight, FiArrowRight } from 'react-icons/fi';
+import { FiLinkedin, FiTwitter, FiGithub, FiArrowRight, FiInstagram } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import withClick from '../components/common/flipCard';
 import ButtonNoBackground from '../components/common/Button-noBackground';
@@ -11,52 +11,45 @@ import { usePageTitle } from '../utils/usePageTitle';
 const teamData = [
   {
     id: 1,
-    name: "Ragnar Lothbrok",
-    role: "Team Lead & Full Stack Developer",
-    description: `Sarah is an experienced leader and full-stack developer with a strong background in tech and business. She drives the team's vision for innovation and sustainable growth, while also leading the development efforts.`,
-    expertise: "Leadership, Full-Stack Development, Agile Methodologies",
-    languages: "JavaScript, Python, Ruby, SQL",
+    name: "Albert Ondicho",
+    role: "Director, Founder & CTO Techvoyage",
+    description: `With over five years of experience in software engineering across media agencies, telecommunications,edtech and financial services, Albert is well-equipped to address your technology needs. His diverse background has prepared him to expertly guide you through the complexities of technology and deliver effective solutions tailored to your requirements`,
+
     imageUrl: "/images/sarah-connor.jpg",
-    linkedin: "https://linkedin.com/in/sarah",
-    twitter: "https://twitter.com/sarahconnor",
-    github: "https://github.com/sarah",
+    linkedin: "https://www.linkedin.com/in/albert-ondicho/",
+    twitter: "https://x.com/ondicho_albert",
+    github: "https://github.com/ondicho",
   },
   {
     id: 2,
-    name: "Tony Stark",
-    role: "Backend Developer & Data Scientist",
-    description: `Tony excels at developing robust backend systems and leveraging data science techniques to extract insights and drive decisions.`,
-    expertise: "Backend Development, Data Science, Machine Learning",
-    languages: "Python, Java, SQL",
+    name: "Caleb Fundi",
+    role: "Software Engineeer TechVoyage",
+    description: `Caleb is currently pursuing a Bachelor's in Computer Science at Zetech University, having recently completed his diploma. Alongside his studies, he thrives as a software engineer at TechVoyage, where he brings ideas to life using Django for innovative software and web development. With hands-on experience in Python, particularly in artificial intelligence, he is equipped to build intelligent, dynamic applications that push the boundaries of technology.`,
     imageUrl: "/images/hermione-granger.jpg",
-    linkedin: "https://linkedin.com/in/hermione",
-    twitter: "https://twitter.com/hermione",
-    github: "https://github.com/hermione",
+    linkedin: "https://www.linkedin.com/in/caleb-fundi-115a34298/",
+  
+    github: "https://github.com/calemaley",
   },
   {
     id: 3,
-    name: "John Snow",
-    role: "Full Stack Developer",
-    description: `John is a full-stack expert, skilled in building efficient and scalable applications. He specializes in modern web technologies and cloud architecture.`,
-    expertise: "Full-Stack Development, Cloud Architecture, RESTful APIs",
-    languages: "JavaScript, TypeScript, Python, Node.js",
+    name: "Brian Omondi",
+    role: "Full-stack Developer",
+    description: `Brian is a dynamic full-stack software developer with a wealth of experience in creating scalable applications. He focuses on delivering innovative, user-centric solutions that effectively tackle business, organization and individual challenges. With a dedication to quality and efficiency, he ensures that every project meets and exceeds client expectations.`,
     imageUrl: "/images/john-snow.jpg",
-    linkedin: "https://linkedin.com/in/johnsnow",
-    twitter: "https://twitter.com/johnsnow",
-    github: "https://github.com/johnsnow",
+    linkedin: "www.linkedin.com/in/brian-omondi-1603529a/",
+ 
+    github: "https://github.com/brianhilsden",
   },
 
   {
     id: 4,
-    name: "Harry Potter",
-    role: "UI/UX Expert",
-    description: `Harry designs intuitive and visually appealing interfaces. His focus on user-centered design helps create engaging and functional products.`,
-    expertise: "UI/UX Design, Wireframing, Prototyping",
-    tools: "Figma, Sketch, Adobe XD",
+    name: "Maxmillan Ng'ethe",
+    role: "Graphic designer",
+    description: `Max is passionate in what he does having experience in  Graphic design, Animation and Web design. He's competent in logo design and Business card designs he is a self driven partner striving for growth to achieve better`,
     imageUrl: "/images/harry-potter.jpg",
-    linkedin: "https://linkedin.com/in/harry",
-    twitter: "https://twitter.com/harry",
-    github: "https://github.com/harry",
+    linkedin: "https://www.linkedin.com/in/max-n-7324b8333/",
+    instagram:"https://www.instagram.com/lil_maxsy/profilecard/?igsh=Nmk2MTBhdnUxcjFv ",
+  
   },
 ];
 
@@ -77,14 +70,14 @@ const Card = ({ variant, style, member }) => {
       {variant === "Front" ? (
         <>
           <img
-            src="https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp"
+            src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Placeholder_Person.jpg"
             alt={member.name}
             className="w-full h-48 object-cover rounded-t-lg exclude-theme-toggle"
           />
           <div className="p-4 text-center exclude-theme-toggle">
             <h3 className="text-2xl font-semibold mb-1 exclude-theme-toggle">{member.name}</h3>
             <p className="text-md text-neutral-500 exclude-theme-toggle">{member.role}</p>
-            <p className="text-lg mb-4 exclude-theme-toggle">{member.expertise}</p>
+ 
             <div className='flex justify-center items-center'>
             <ButtonNoBackground text="Flip Card" />
             <FiArrowRight/>
@@ -96,9 +89,9 @@ const Card = ({ variant, style, member }) => {
         <div className="p-4 text-center exclude-theme-toggle">
           <h3 className="text-2xl font-semibold mb-1 exclude-theme-toggle">{member.name}</h3>
           <p className="text-md mb-4 exclude-theme-toggle">{member.description}</p>
-          <p className="text-md mb-4 exclude-theme-toggle">{member.languages || member.tools}</p>
+        
           <div className="flex gap-4 justify-center exclude-theme-toggle">
-            <motion.a
+            {member.linkedin && <motion.a
               href={member.linkedin}
               target="_blank"
               rel="noopener noreferrer"
@@ -106,8 +99,8 @@ const Card = ({ variant, style, member }) => {
               className="text-primary exclude-theme-toggle"
             >
               <FiLinkedin size={24} />
-            </motion.a>
-            <motion.a
+            </motion.a>}
+           {member.twitter && <motion.a
               href={member.twitter}
               target="_blank"
               rel="noopener noreferrer"
@@ -115,8 +108,17 @@ const Card = ({ variant, style, member }) => {
               className="text-primary exclude-theme-toggle"
             >
               <FiTwitter size={24} />
-            </motion.a>
-            <motion.a
+            </motion.a>}
+            {member.instagram &&<motion.a
+              href={member.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.2 }}
+              className="text-primary exclude-theme-toggle"
+            >
+              <FiInstagram size={24} />
+            </motion.a>}
+           {member.github && <motion.a
               href={member.github}
               target="_blank"
               rel="noopener noreferrer"
@@ -124,7 +126,7 @@ const Card = ({ variant, style, member }) => {
               className="text-primary exclude-theme-toggle"
             >
               <FiGithub size={24} />
-            </motion.a>
+            </motion.a>}
             
           </div>
           <div className='flex justify-center items-center'>
