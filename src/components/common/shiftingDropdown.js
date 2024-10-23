@@ -486,7 +486,8 @@ const Projects = () => {
   const navigate = useNavigate();
  
   const projectsData = useSelector((state) => state.projects.projects.slice(1, 3))
-
+  console.log(projectsData);
+  
   
 
 /*   const projectsData = [
@@ -515,7 +516,7 @@ const Projects = () => {
           <span>
             <img
               className="mb-2 h-14 w-full rounded object-cover exclude-theme-toggle"
-              src={project.imageurl}
+              src={project.imageUrl}
               alt={project.title}
             />
             <h4

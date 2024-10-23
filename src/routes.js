@@ -8,6 +8,7 @@ import Projects from "./pages/Projects";
 import ContactUs from "./pages/ContactUs";
 import SignInPage from "./pages/SignIn";
 import ProtectedRoute from "./components/layout/protectedRoutes";
+import ProfilePage from "./pages/Profile";
 
 const routes = [
     { path: "/", 
@@ -34,6 +35,9 @@ const routes = [
             },{
                 path:"/adminLogin",
                 element:<SignInPage/>
+            },{
+                path:"/profile",
+                element:<ProtectedRoute element={<ProfilePage/>}/>
             }
 
         ]

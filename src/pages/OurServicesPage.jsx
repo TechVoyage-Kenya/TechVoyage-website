@@ -32,14 +32,9 @@ const OurServicesPage = () => {
     },
   };
 
-  const cardVariants = {
+  const itemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-    hover: {
-      scale: 1.05,
-      boxShadow: "0px 15px 25px rgba(0,0,0,0.15)",
-      transition: { type: 'spring', stiffness: 300 },
-    },
   };
 
   const buttonVariants = {
@@ -86,100 +81,109 @@ const OurServicesPage = () => {
       </section>
 
       {/* Services Section */}
-      <section className="services-section py-16 bg-gray-700">
-        <div className="container mx-auto">
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+      <section className="services-section py-16 bg-gray-700 exclude-theme-toggle">
+        <div className="container mx-auto exclude-theme-toggle">
+          <motion.ul
+            className="space-y-6 exclude-theme-toggle" // Add spacing between items
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
             {/* Website Development */}
-            <motion.div
-              className="p-6 border rounded-lg text-center cursor-pointer exclude-theme-toggle"
-              variants={cardVariants}
-              whileHover="hover"
+            <motion.li
+              className="p-6 border rounded-lg cursor-pointer text-left exclude-theme-toggle"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05, boxShadow: "0px 15px 25px rgba(0,0,0,0.15)" }}
               onClick={() => toggleService("website-development")}
               style={{ backgroundColor: theme.cardBgColor }}
             >
-              <FiMonitor size={50} className="text-primary mx-auto mb-4 exclude-theme-toggle" />
-              <h3 className="text-xl font-semibold mb-2 exclude-theme-toggle">Website Development</h3>
-              <p className="text-md text-neutral-300 mb-4 exclude-theme-toggle">
-                Custom websites that are scalable, secure, and performant.
-              </p>
-              <button className="text-primary hover:text-hover exclude-theme-toggle">
-                {expandedService === "website-development" ? "Hide Details" : "Learn More"} <FiArrowRight />
-              </button>
-
+              <div className="flex items-center mb-4 exclude-theme-toggle">
+                <FiMonitor size={50} className="text-primary mr-4 exclude-theme-toggle" />
+                <div>
+                  <h3 className="text-xl font-semibold mb-1 exclude-theme-toggle">Website Development</h3>
+                  <p className="text-md text-neutral-300 mb-2 exclude-theme-toggle">
+                    Custom websites that are scalable, secure, and performant.
+                  </p>
+                  <button className="text-primary hover:text-hover">
+                    {expandedService === "website-development" ? "Hide Details" : "Learn More"} <FiArrowRight />
+                  </button>
+                </div>
+              </div>
               {/* Expanded Content */}
               {expandedService === "website-development" && (
-                <div className="mt-4 text-neutral-200 exclude-theme-toggle">
-                  <p className='exclude-theme-toggle'>
+                <div className="mt-2 text-neutral-200">
+                  <p>
                     Our team builds websites from scratch using the latest technologies such as React, Flask, and Node.js to provide top-notch performance and scalability.
                   </p>
                 </div>
               )}
-            </motion.div>
+            </motion.li>
 
             {/* Web Design */}
-            <motion.div
-              className="p-6 border rounded-lg text-center cursor-pointer exclude-theme-toggle"
-              variants={cardVariants}
-              whileHover="hover"
+            <motion.li
+              className="p-6 border rounded-lg cursor-pointer text-left exclude-theme-toggle"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05, boxShadow: "0px 15px 25px rgba(0,0,0,0.15)" }}
               onClick={() => toggleService("web-design")}
               style={{ backgroundColor: theme.cardBgColor }}
             >
-              <FiSettings size={50} className="text-primary mx-auto mb-4 exclude-theme-toggle" />
-              <h3 className="text-xl font-semibold mb-2 exclude-theme-toggle">Web Design</h3>
-              <p className="text-md text-neutral-300 mb-4 exclude-theme-toggle">
-                Stunning, responsive designs that attract and engage users.
-              </p>
-              <button className="text-primary hover:text-hover exclude-theme-toggle">
-                {expandedService === "web-design" ? "Hide Details" : "Learn More"} <FiArrowRight />
-              </button>
-
+              <div className="flex items-center mb-4 exclude-theme-toggle">
+                <FiSettings size={50} className="text-primary mr-4" />
+                <div>
+                  <h3 className="text-xl font-semibold mb-1 exclude-theme-toggle">Web Design</h3>
+                  <p className="text-md text-neutral-300 mb-2 exclude-theme-toggle">
+                    Stunning, responsive designs that attract and engage users.
+                  </p>
+                  <button className="text-primary hover:text-hover exclude-theme-toggle">
+                    {expandedService === "web-design" ? "Hide Details" : "Learn More"} <FiArrowRight />
+                  </button>
+                </div>
+              </div>
               {/* Expanded Content */}
               {expandedService === "web-design" && (
-                <div className="mt-4 text-neutral-200 exclude-theme-toggle">
+                <div className="mt-2 text-neutral-200 exclude-theme-toggle">
                   <p className='exclude-theme-toggle'>
                     We design with the user in mind, focusing on creating beautiful, functional, and responsive websites that provide an excellent user experience.
                   </p>
                 </div>
               )}
-            </motion.div>
+            </motion.li>
 
             {/* Content Management */}
-            <motion.div
-              className="p-6 border rounded-lg text-center cursor-pointer exclude-theme-toggle"
-              variants={cardVariants}
-              whileHover="hover"
+            <motion.li
+              className="p-6 border rounded-lg cursor-pointer text-left exclude-theme-toggle"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05, boxShadow: "0px 15px 25px rgba(0,0,0,0.15)" }}
               onClick={() => toggleService("content-management")}
               style={{ backgroundColor: theme.cardBgColor }}
             >
-              <FiEdit size={50} className="text-primary mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2 exclude-theme-toggle">Content Management</h3>
-              <p className="text-md text-neutral-300 mb-4 exclude-theme-toggle">
-                Easy-to-manage CMS solutions for effortless content updates.
-              </p>
-              <button className="text-primary hover:text-hover exclude-theme-toggle">
-                {expandedService === "content-management" ? "Hide Details" : "Learn More"} <FiArrowRight />
-              </button>
-
+              <div className="flex items-center mb-4 exclude-theme-toggle">
+                <FiEdit size={50} className="text-primary mr-4" />
+                <div>
+                  <h3 className="text-xl font-semibold mb-1 exclude-theme-toggle">Content Management</h3>
+                  <p className="text-md text-neutral-300 mb-2 exclude-theme-toggle">
+                    Easy-to-manage CMS solutions for effortless content updates.
+                  </p>
+                  <button className="text-primary hover:text-hover">
+                    {expandedService === "content-management" ? "Hide Details" : "Learn More"} <FiArrowRight />
+                  </button>
+                </div>
+              </div>
               {/* Expanded Content */}
               {expandedService === "content-management" && (
-                <div className="mt-4 text-neutral-200 exclude-theme-toggle">
-                  <p>
+                <div className="mt-2 text-neutral-200 exclude-theme-toggle">
+                  <p className='exclude-theme-toggle'>
                     We integrate content management systems (CMS) like WordPress, Contentful, and Strapi to allow you to update your content without hassle.
                   </p>
                 </div>
               )}
-            </motion.div>
-          </motion.div>
+            </motion.li>
+          </motion.ul>
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className="cta-section py-16 text-center exclude-theme-toggle">
+      <section className="cta-section py-16 text-center">
         <motion.h3
           className="text-2xl font-semibold mb-6"
           initial={{ opacity: 0, scale: 0.9 }}
@@ -189,7 +193,7 @@ const OurServicesPage = () => {
           Ready to Elevate Your Business Online?
         </motion.h3>
         <motion.button
-          className="px-8 py-3 bg-accent1 text-white rounded-full hover:bg-hover exclude-theme-toggle"
+          className="px-8 py-3 bg-accent1 text-white rounded-full hover:bg-hover"
           variants={buttonVariants}
           whileHover="hover"
           onClick={() => navigate("/contactUs")}

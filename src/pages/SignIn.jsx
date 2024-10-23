@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
+import { auth, provider } from "../firebase";
+import { signInWithPopup} from "firebase/auth";
+import { SiGoogle } from 'react-icons/si';
 
 
 import { useDispatch } from 'react-redux';
@@ -61,6 +64,40 @@ const SignInPage = () => {
       setErrorMessage('An error occurred. Please try again.');
     }
   };
+
+  function googleLogin() {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+   
+        const user = result.user;
+
+        console.log(user);
+        
+
+        fetch("https://tech-voyage-express-js.vercel.app/api/auth/userByEmail", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: user.email }),
+        }).then((res) => {
+          if (res.ok) {
+            res
+              .json()
+              .then((data) => {
+                localStorage.setItem("token", data.token);
+                dispatch(addUser(data?.user))
+                
+                
+              })
+              .then(() => navigate("/"));
+          }
+        }); 
+      })
+      .catch((error) => {
+        console.error("Google login error:", error);
+      });
+  }
   
 
 
@@ -129,6 +166,21 @@ const SignInPage = () => {
               </>
           
           </motion.button>
+          <motion.button
+            className="w-full py-2 px-4 bg-accent2 text-white font-semibold rounded-lg hover:bg-accent2/80 flex justify-center items-center space-x-2 exclude-theme-toggle"
+            variants={buttonVariants}
+            whileHover="hover"
+            onClick={googleLogin}
+           
+          >
+          
+              <>
+                <SiGoogle className="text-lg exclude-theme-toggle" />
+                <span>Google </span>
+              </>
+          
+          </motion.button>
+
 
         
         </motion.form>

@@ -9,6 +9,8 @@ import { AiOutlineHome } from "react-icons/ai";
 import { MdOutlineDesignServices, MdOutlineContactPage } from "react-icons/md";
 import { FaProjectDiagram, FaUsers } from "react-icons/fa";
 import { BsClipboardCheck } from "react-icons/bs";
+import { FaUserCircle } from "react-icons/fa"; // Profile icon import
+
 import { AiOutlineLogout } from "react-icons/ai";
 import { deleteUser } from "../../redux/reducers/userSlice";
 
@@ -29,7 +31,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    console.log('User:', user); // Log the user state to see what it contains
+    
     if (user && user.email) {
       setLoggedIn(true);
     } else {
@@ -37,7 +39,7 @@ const Navbar = () => {
     }
   }, [user]);
   
-  console.log(loggedIn);
+ 
   
 
   useEffect(() => {
@@ -76,6 +78,7 @@ const Navbar = () => {
     { name: "Our Team", path: "/ourTeam", icon: <FaUsers /> },
     ...(user.email ? [{ name: "Tasks Board", path: "/tasksBoard", icon: <BsClipboardCheck /> }] : []),
     { name: "Contact Us", path: "/contactUs", icon: <MdOutlineContactPage /> },
+    ...(user.email ? [{ name: "Profile", path: "/profile", icon: <FaUserCircle /> }] : []),
   ];
   
 
@@ -173,6 +176,12 @@ const Navbar = () => {
       </motion.div>
 
       {isDesktop && <ShiftingDropDown />}
+      {isDesktop && user.fullName && <span className="text-lg font-medium cursor-pointer exclude-theme-toggle hover:font-bold" onClick={()=>navigate("/profile")}  style={{
+              color: theme.navTextColor ? theme.navTextColor : theme.textColor,
+            }}>
+        Welcome, {user.fullName || 'User'}
+      </span>}
+
       
       {/* Overlay to darken rest of the page */}
       {isOpen && (
@@ -227,6 +236,7 @@ const Navbar = () => {
           <AiOutlineLogout className="text-lg" />
           <span className="exclude-theme-toggle">Logout</span>
         </motion.li>}
+        
       </motion.ul>
     </nav>
   );

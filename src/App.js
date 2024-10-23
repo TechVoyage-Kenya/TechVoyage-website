@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ReactLenis } from '@studio-freight/react-lenis';
+import { ReactLenis } from "@studio-freight/react-lenis";
 import "./App.css";
 import { Outlet } from "react-router-dom";
 
@@ -15,33 +15,33 @@ import { addUser } from "./redux/reducers/userSlice";
 
 function App() {
   const theme = useSelector((state) => state.colorTheme.value);
-  const user = useSelector((state)=>state.user.value)
+  const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
 
- 
   useEffect(() => {
     const confirmToken = async () => {
-      const token = localStorage.getItem('token'); 
-    
-      
+      const token = localStorage.getItem("token");
+
       if (token) {
         try {
-          const response = await fetch('https://tech-voyage-express-js.vercel.app/api/auth', {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`
+          const response = await fetch(
+            "https://tech-voyage-express-js.vercel.app/api/auth",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             }
-           
-          });
+          );
 
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
           }
 
           const data = await response.json();
-          dispatch(addUser(data.user))
+          dispatch(addUser(data.user));
         } catch (error) {
-          console.error('Error confirming token:', error);
+          console.error("Error confirming token:", error);
         }
       }
     };
@@ -49,63 +49,69 @@ function App() {
   }, [dispatch]);
 
   console.log(user);
-  
 
- 
-  
-
-    // Fetch projects from the backend
-    useEffect(() => {
-     
-        const fetchProjects = async () => {
-          try {
-            const response = await axios.get('https://tech-voyage-express-js.vercel.app/api/projects');
-            dispatch(setProjects(response.data))
-          } catch (error) {
-            console.error('Error fetching projects:', error);
-          }
-        };
-        fetchProjects();
-      
-    }, [dispatch]);
-
-
-    // Fetch profiles from the backend
-    useEffect(() => {
-     
-      const fetchProfiles = async () => {
-        try {
-          const response = await axios.get('https://tech-voyage-express-js.vercel.app/api/profile');
-          dispatch(addAllProfiles(response.data))
-        } catch (error) {
-          console.error('Error fetching profiles:', error);
-        }
-      };
-      fetchProfiles();
-    
+  // Fetch projects from the backend
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await axios.get(
+          "https://tech-voyage-express-js.vercel.app/api/projects"
+        );
+        dispatch(setProjects(response.data));
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+    fetchProjects();
   }, [dispatch]);
 
+  // Fetch profiles from the backend
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const response = await axios.get(
+          "https://tech-voyage-express-js.vercel.app/api/profile"
+        );
+        dispatch(addAllProfiles(response.data));
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+      }
+    };
+    fetchProfiles();
+  }, [dispatch]);
 
-  
   useEffect(() => {
     axios
       .get("https://tech-voyage-express-js.vercel.app/api/tasks/")
       .then((response) => dispatch(fetchedTasks(response.data)))
       .catch((error) => console.error("Error fetching team:", error));
   }, [dispatch]);
-    
-  
 
-
-  const [rippleEffect, setRippleEffect] = useState({ x: 0, y: 0, active: false });
+  const [rippleEffect, setRippleEffect] = useState({
+    x: 0,
+    y: 0,
+    active: false,
+  });
 
   const toggleTheme = (e) => {
     const tagName = e.target.tagName.toLowerCase();
+    console.log(tagName);
     
-    
+
     // Ensures the click is not on a functional element (like button, input, etc.)
-    const nonFunctionalTags = ["button", "a", "input", "textarea", "select", "path", "svg"];
-    if (!nonFunctionalTags.includes(tagName) && !e.target.classList.contains("exclude-theme-toggle")) {
+    const nonFunctionalTags = [
+      "button",
+      "a",
+      "input",
+      "textarea",
+      "select",
+      "path",
+      "svg",
+    ];
+    if (
+      !nonFunctionalTags.includes(tagName) &&
+      !e.target.classList.contains("exclude-theme-toggle")
+    ) {
       dispatch(switchTheme()); // Dispatch action to switch theme
 
       // Ripple effect logic
@@ -130,7 +136,7 @@ function App() {
       }}
     >
       <div
-        className="min-h-screen font-mulish flex flex-col" 
+        className="min-h-screen font-mulish flex flex-col"
         style={{
           color: theme.textColor,
           backgroundColor: theme.backgroundColor,

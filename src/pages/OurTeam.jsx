@@ -1,22 +1,25 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import {
   FiLinkedin,
   FiTwitter,
   FiGithub,
-
   FiArrowRight,
   FiEdit,
-
   FiPlusCircle,
+  FiInstagram,
 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import withClick from "../components/common/flipCard";
 import ButtonNoBackground from "../components/common/Button-noBackground";
 import { usePageTitle } from "../utils/usePageTitle";
 import TeamModal from "../components/common/TeamModal";
-import { addProfile,deleteProfile,editProfile } from "../redux/reducers/profilesSice";
+import {
+  addProfile,
+  deleteProfile,
+  editProfile,
+} from "../redux/reducers/profilesSice";
 import axios from "axios";
 import ConfirmModal from "../components/common/DeleteConfirmationModal";
 /* const teamData = [
@@ -71,9 +74,15 @@ import ConfirmModal from "../components/common/DeleteConfirmationModal";
   },
 ]; */
 
-const Card = ({ variant, style, member, user,imageUrl, handleEdit, handleDelete }) => {
-
-  
+const Card = ({
+  variant,
+  style,
+  member,
+  user,
+  imageUrl,
+  handleEdit,
+  handleDelete,
+}) => {
   return (
     <motion.div
       style={style}
@@ -84,29 +93,28 @@ const Card = ({ variant, style, member, user,imageUrl, handleEdit, handleDelete 
         transition: { duration: 0.3, ease: "easeInOut" },
       }}
     >
-      {user?.email && user.id === member.user_id && (
+      {user?.email && user.id === member.userId && (
         <div className="absolute top-4 right-4 flex space-x-2">
           <button
             onClick={() => handleEdit(member)}
             className="text-accent1 hover:text-accent2 px-2 py-2 bg-gray-200/30 grid place-content-center"
           >
-          
             <FiEdit size={24} />
           </button>
-         <ConfirmModal Confirmed={()=>handleDelete(member.id)}/>
+          <ConfirmModal Confirmed={() => handleDelete(member.id)} />
         </div>
       )}
-      
+
       {variant === "Front" ? (
         <>
           <img
             src={imageUrl}
-            alt={member.full_name}
-            className="w-full h-48 object-cover rounded-t-lg exclude-theme-toggle"
+            alt={member.fullName}
+            className={`w-full h-[300px] rounded-t-lg exclude-theme-toggle ${member.fullName === "Maxmillan Ng'ethe" ? 'object-cover' : 'object-cover'}`} 
           />
           <div className="p-4 text-center exclude-theme-toggle">
             <h3 className="text-2xl font-semibold mb-1 exclude-theme-toggle">
-              {member.full_name}
+              {member.fullName}
             </h3>
             <p className="text-md text-neutral-500 exclude-theme-toggle">
               {member.role}
@@ -123,7 +131,7 @@ const Card = ({ variant, style, member, user,imageUrl, handleEdit, handleDelete 
       ) : (
         <div className="p-4 text-center exclude-theme-toggle">
           <h3 className="text-2xl font-semibold mb-1 exclude-theme-toggle">
-            {member.full_name}
+            {member.fullName}
           </h3>
           <p className="text-md mb-4 exclude-theme-toggle">
             {member.description}
@@ -131,34 +139,73 @@ const Card = ({ variant, style, member, user,imageUrl, handleEdit, handleDelete 
           <p className="text-md mb-4 exclude-theme-toggle">
             {member.languages || member.tools}
           </p>
-          <div className="flex gap-4 justify-center exclude-theme-toggle">
-            <motion.a
-              href={member.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.2 }}
-              className="text-primary exclude-theme-toggle"
-            >
-              <FiLinkedin size={24} />
-            </motion.a>
-            <motion.a
-              href={member.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.2 }}
-              className="text-primary exclude-theme-toggle"
-            >
-              <FiTwitter size={24} />
-            </motion.a>
-            <motion.a
-              href={member.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.2 }}
-              className="text-primary exclude-theme-toggle"
-            >
-              <FiGithub size={24} />
-            </motion.a>
+          <div className="flex gap-4 justify-center exclude-theme-toggle items-center">
+            {member.linkedin && (
+              <motion.a
+                href={member.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2 }}
+                className="text-primary exclude-theme-toggle"
+                title="LinkedIn"
+              >
+                <FiLinkedin size={24} />
+              </motion.a>
+            )}
+            {member.twitter && (
+              <motion.a
+                href={member.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2 }}
+                className="text-primary exclude-theme-toggle"
+                title="twitter"
+              >
+                <FiTwitter size={24} />
+              </motion.a>
+            )}
+            {member.github && (
+              <motion.a
+                href={member.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2 }}
+                className="text-primary exclude-theme-toggle"
+                title="github"
+              >
+                <FiGithub size={24} />
+              </motion.a>
+            )}
+            {member.instagram && (
+              <motion.a
+                href={member.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2 }}
+                className="text-primary exclude-theme-toggle"
+                title="Instagram"
+              >
+                <FiInstagram size={24} />
+              </motion.a>
+            )}
+            {member.website && (
+              <motion.a
+                href={member.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2 }}
+                className="text-primary exclude-theme-toggle flex items-center justify-center"
+                title="Personal website"
+              >
+                <img
+                  src={member.fullName==="Brian Omondi" && "https://brian-omondi.vercel.app/_next/image?url=%2Fimages%2FofficialLogo.png&w=96&q=75"}
+                  width={35}
+                  height={35}
+                  
+                  alt="website logo"
+                />
+              </motion.a>
+            )}
           </div>
           <div className="flex justify-center items-center">
             <ButtonNoBackground text="Go back" />
@@ -172,8 +219,8 @@ const Card = ({ variant, style, member, user,imageUrl, handleEdit, handleDelete 
 const EnhancedCard = withClick(Card);
 
 const OurTeamPage = () => {
- const team = useSelector((state)=>state.profiles.profiles)
- const dispatch = useDispatch()
+  const team = useSelector((state) => state.profiles.profiles);
+  const dispatch = useDispatch();
 
   const theme = useSelector((state) => state.colorTheme.value);
   const user = useSelector((state) => state.user.value);
@@ -183,40 +230,33 @@ const OurTeamPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
 
-
-  
   // Add a team member
   const addTeamMember = (profile) => {
-    const newProfile = {...profile,user_id:user.id}
-  
-  
-    
+    const newProfile = { ...profile, userId: user.id };
+
     axios
       .post("https://tech-voyage-express-js.vercel.app/api/profile", newProfile)
       .then((response) => {
-        
-        dispatch(addProfile(response?.data?.data))})
+        dispatch(addProfile(response?.data?.data));
+      })
       .catch((error) => console.error("Error adding profile:", error));
   };
 
   // Update a team member
   const updateTeamMember = (updatedMember) => {
- 
-    
-  
-    
     axios
-      .put(`https://tech-voyage-express-js.vercel.app/api/profile/${updatedMember.id}`, updatedMember)
+      .put(
+        `https://tech-voyage-express-js.vercel.app/api/profile/${updatedMember.id}`,
+        updatedMember
+      )
       .then((response) => {
-        dispatch(editProfile(response?.data?.data))
+        dispatch(editProfile(response?.data?.data));
       })
       .catch((error) => console.error("Error updating profile:", error));
   };
 
   // Delete a team member
   const deleteTeamMember = (id) => {
-   
-    
     axios
       .delete(`https://tech-voyage-express-js.vercel.app/api/profile/${id}`)
       .then(() => dispatch(deleteProfile(id)))
@@ -224,8 +264,6 @@ const OurTeamPage = () => {
   };
 
   const handleAdd = () => {
-  
-    
     setSelectedMember(null);
 
     setIsModalOpen(true);
@@ -254,7 +292,6 @@ const OurTeamPage = () => {
       transition: { duration: 0.5 }, // Duration of the animation
     },
   };
- 
 
   return (
     <div
@@ -285,15 +322,15 @@ const OurTeamPage = () => {
       </section>
 
       {user?.email && (
-              <div className="text-center my-6">
-                <button
-                  onClick={handleAdd}
-                  className="px-4 py-2 bg-accent1 text-white rounded-lg"
-                >
-                  <FiPlusCircle className="inline-block mr-2" /> Add New Member
-                </button>
-              </div>
-            )}
+        <div className="text-center my-6">
+          <button
+            onClick={handleAdd}
+            className="px-4 py-2 bg-accent1 text-white rounded-lg"
+          >
+            <FiPlusCircle className="inline-block mr-2" /> Add Profile
+          </button>
+        </div>
+      )}
 
       <section className=" py-16 p-2 md:px-0 bg-gray-700">
         <div className="container mx-auto">
@@ -303,20 +340,20 @@ const OurTeamPage = () => {
             initial="hidden"
             animate="visible"
           >
-           
-            {team[0] && team.map((member) => (
-              <motion.div key={member.id} variants={cardVariants}>
-                <EnhancedCard
-                  width="100%"
-                  height="25rem"
-                  member={member}
-                  handleDelete={deleteTeamMember}
-                  handleEdit={handleEdit}
-                  user={user}
-                  imageUrl={member.image_url}
-                />
-              </motion.div>
-            ))}
+            {team[0] &&
+              team.map((member) => (
+                <motion.div key={member.id} variants={cardVariants}>
+                  <EnhancedCard
+                    width="100%"
+                    height="25rem"
+                    member={member}
+                    handleDelete={deleteTeamMember}
+                    handleEdit={handleEdit}
+                    user={user}
+                    imageUrl={member.imageUrl}
+                  />
+                </motion.div>
+              ))}
           </motion.div>
         </div>
       </section>

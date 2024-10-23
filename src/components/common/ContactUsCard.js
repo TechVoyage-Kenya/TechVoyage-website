@@ -8,21 +8,21 @@ export const ContactUsCard = () => {
         tag="/ Support"
         text={
           <>
-            <strong>Have questions or need a quote?</strong> We'd love to help! 
+            <strong>Have questions or need a quote?</strong> We'd love to help!
           </>
         }
         examples={[
-            "What types of technology solutions do you specialize in?",
-            "Can you provide examples of successful projects you've completed?",
-            "How do you ensure the quality and reliability of your solutions?",
-            "What is your approach to project management and timelines?",
-            "Do you offer ongoing maintenance and support for your solutions?",
-            "How do you stay updated with the latest technology trends and advancements?",
-            "Can you customize solutions to meet specific business requirements?",
-            "What is your pricing model for your services?",
-            "Do you offer a free consultation or estimate for potential projects?",
-            "How do you handle project deadlines and unexpected challenges?",
-          ]}
+          "What types of technology solutions do you specialize in?",
+          "Can you provide examples of successful projects you've completed?",
+          "How do you ensure the quality and reliability of your solutions?",
+          "What is your approach to project management and timelines?",
+          "Do you offer ongoing maintenance and support for your solutions?",
+          "How do you stay updated with the latest technology trends and advancements?",
+          "Can you customize solutions to meet specific business requirements?",
+          "What is your pricing model for your services?",
+          "Do you offer a free consultation or estimate for potential projects?",
+          "How do you handle project deadlines and unexpected challenges?",
+        ]}
       />
     </div>
   );

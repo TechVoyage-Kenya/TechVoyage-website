@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { FiArrowRight, FiMail, FiMapPin } from "react-icons/fi";
 import { SiGithub, SiLinkedin, SiGmail, SiWhatsapp } from "react-icons/si";
@@ -8,59 +8,77 @@ import { useNavigate } from "react-router-dom";
 
 export const TechVoyageGrid = () => {
   const navigate = useNavigate()
-  return (
-    <div className="min-h-screen bg-zinc-950 px-4 py-12 text-zinc-50">
-      <Logo />
-      <motion.div
-        initial="initial"
-        animate="animate"
-        transition={{
-          staggerChildren: 0.05,
-        }}
-        className="mx-auto grid max-w-4xl grid-flow-dense grid-cols-12 gap-4"
-      >
-        <HeaderBlock navigate={navigate} />
-        <SocialsBlock />
-        <AboutBlock />
-        <LocationBlock />
-        <EmailListBlock />
-      </motion.div>
+  const ref = useRef(null)
+  const isInView = useInView(ref,{once:true})
+
+  useEffect(()=>{
+    console.log(isInView);
     
-    </div>
-  );
+  },[isInView])
+  console.log(isInView);
+  
+
+ 
+    return (
+      <div ref={ref} className="min-h-screen bg-zinc-950 px-4 py-12 text-zinc-50">
+        <Logo />
+        <motion.div
+          initial="initial"
+          animate={ "animate"}
+          transition={{
+            staggerChildren: 0.05,
+          }}
+          className="mx-auto grid max-w-4xl grid-flow-dense grid-cols-12 gap-4"
+        >
+          <HeaderBlock navigate={navigate} isInView={isInView} />
+          <SocialsBlock isInView={isInView} />
+          <AboutBlock isInView={isInView} />
+          <LocationBlock isInView={isInView} />
+          <EmailListBlock isInView={isInView} />
+        </motion.div>
+      
+      </div>
+    );
+
+  
+  
 };
 
-const Block = ({ className, ...rest }) => {
-  return (
-    <motion.div
-      variants={{
-        initial: {
-          scale: 0.5,
-          y: 50,
-          opacity: 0,
-        },
-        animate: {
-          scale: 1,
-          y: 0,
-          opacity: 1,
-        },
-      }}
-      transition={{
-        type: "spring",
-        mass: 3,
-        stiffness: 400,
-        damping: 50,
-      }}
-      className={twMerge(
-        "col-span-4 rounded-lg border border-zinc-700 bg-background p-6",
-        className
-      )}
-      {...rest}
-    />
-  );
+const Block = ({ className, isInView, ...rest }) => {
+  if(isInView){
+    return (
+      <motion.div
+        variants={{
+          initial: {
+            scale: 0.5,
+            y: 50,
+            opacity: 0,
+          },
+          animate: {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+          },
+        }}
+        transition={{
+          type: "spring",
+          mass: 3,
+          stiffness: 400,
+          damping: 50,
+        }}
+        className={twMerge(
+          "col-span-4 rounded-lg border border-zinc-700 bg-background p-6",
+          className
+        )}
+        {...rest}
+      />
+    );
+
+  }
+  
 };
-const HeaderBlock = ({navigate}) => (
-  <Block className="col-span-12 row-span-2 md:col-span-6">
+const HeaderBlock = ({navigate,isInView}) => (
+  <Block className="col-span-12 row-span-2 md:col-span-6" isInView={isInView}>
     <img
       src={logo}
       alt="TechVoyage logo"
@@ -81,7 +99,7 @@ const HeaderBlock = ({navigate}) => (
 );
 
 
-const SocialsBlock = () => (
+const SocialsBlock = ({isInView}) => (
   <>
     <Block
       whileHover={{
@@ -89,6 +107,7 @@ const SocialsBlock = () => (
         scale: 1.1,
       }}
       className="col-span-6 bg-red-500 md:col-span-3"
+      isInView={isInView}
     >
       <a
         href="mailto:techvoyage.kenya@gmail.com"
@@ -100,11 +119,12 @@ const SocialsBlock = () => (
       </a>
     </Block>
     <Block
-      whileHover={{
+      whileHover={isInView && {
         rotate: "-2.5deg",
         scale: 1.1,
       }}
       className="col-span-6  md:col-span-3 bg-black"
+      isInView={isInView}
     >
       <a
         href="https://github.com/TechVoyage-Kenya"
@@ -120,6 +140,7 @@ const SocialsBlock = () => (
         rotate: "-2.5deg",
         scale: 1.1,
       }}
+      isInView={isInView}
       className="col-span-6 bg-text md:col-span-3"
     >
       <a
@@ -137,6 +158,7 @@ const SocialsBlock = () => (
         scale: 1.1,
       }}
       className="col-span-6 md:col-span-3 bg-accent1"
+      isInView={isInView}
     >
       <a
         href="https://wa.me/1234567890"
@@ -151,8 +173,8 @@ const SocialsBlock = () => (
 );
 
 
-const AboutBlock = () => (
-  <Block className="col-span-12 text-3xl leading-snug">
+const AboutBlock = ({isInView}) => (
+  <Block className="col-span-12 text-3xl leading-snug" isInView={isInView}>
     <p>
       At TechVoyage, we are dedicated to delivering innovative web solutions that propel your business forward.{" "}
       <span className="text-zinc-400">
@@ -163,15 +185,15 @@ const AboutBlock = () => (
 );
 
 
-const LocationBlock = () => (
-  <Block className="col-span-12 flex flex-col items-center gap-4 md:col-span-3">
+const LocationBlock = ({isInView}) => (
+  <Block className="col-span-12 flex flex-col items-center gap-4 md:col-span-3" isInView={isInView}>
     <FiMapPin className="text-3xl" />
     <p className="text-center text-lg text-zinc-400">Nairobi, Kenya</p>
   </Block>
 );
 
-const EmailListBlock = () => (
-  <Block className="col-span-12 md:col-span-9">
+const EmailListBlock = ({isInView}) => (
+  <Block className="col-span-12 md:col-span-9" isInView={isInView}>
     <p className="mb-3 text-lg">Join our newsletter</p>
     <form
       onSubmit={(e) => e.preventDefault()}

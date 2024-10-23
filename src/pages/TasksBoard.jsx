@@ -44,43 +44,80 @@ const Board = () => {
   const dispatch = useDispatch();
 
   const cards = useSelector((state) => state.tasks?.value);
+  const [selectedProject, setSelectedProject] = useState("");
+  const projects = useSelector((state) => state.projects?.projects);
+  
+  
+
+  const handleProjectChange = (e) => {
+    setSelectedProject(e.target.value);
+  };
+
+  const filteredCards = cards.filter(
+    (card) => card.projectId === parseInt(selectedProject) || selectedProject === ""
+  );
+
+  
+ 
+  
 
   return (
-    <div className="flex h-full max-h-screen overflow-x-auto w-full gap-3 pl-12 pr-12 pb-12">
-      <Column
-        title="Backlog"
-        column="backlog"
-        headingColor="text-accent1"
-        cards={cards}
-        dispatch={dispatch}
-      />
-      <Column
-        title="TODO"
-        column="todo"
-        headingColor="text-yellow-400"
-        cards={cards}
-        dispatch={dispatch}
-      />
-      <Column
-        title="In progress"
-        column="doing"
-        headingColor="text-blue-400"
-        cards={cards}
-        dispatch={dispatch}
-      />
-      <Column
-        title="Complete"
-        column="done"
-        headingColor="text-emerald-400"
-        cards={cards}
-        dispatch={dispatch}
-      />
-      <BurnBarrel dispatch={dispatch} />
+    <div className="flex flex-col w-full h-full max-h-screen">
+      <div className="w-full flex justify-center mb-5 text-black">
+        <select
+          className="border p-2 rounded-md bg-gray-300"
+          value={selectedProject}
+          onChange={handleProjectChange}
+        >
+          <option value="">All Projects</option>
+          {projects.map((project) => (
+            <option key={project.id} value={project.id}>
+              {project.title}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="flex h-full max-h-screen overflow-x-auto w-full gap-3 pl-12 pr-12 pb-12">
+        <Column
+        selectedProject={selectedProject}
+          title="Backlog"
+          column="backlog"
+          headingColor="text-accent1"
+          cards={filteredCards}
+          dispatch={dispatch}
+        />
+        <Column
+          title="TODO"
+          selectedProject={selectedProject}
+          column="todo"
+          headingColor="text-yellow-400"
+          cards={filteredCards}
+          dispatch={dispatch}
+        />
+        <Column
+          title="In progress"
+          selectedProject={selectedProject}
+          column="doing"
+          headingColor="text-blue-400"
+          cards={filteredCards}
+          dispatch={dispatch}
+        />
+        <Column
+          title="Complete"
+          column="done"
+          selectedProject={selectedProject}
+          headingColor="text-emerald-400"
+          cards={filteredCards}
+          dispatch={dispatch}
+        />
+        <BurnBarrel dispatch={dispatch} />
+      </div>
     </div>
   );
 };
-const Column = ({ title, headingColor, cards, column, dispatch }) => {
+const Column = ({ title, headingColor, cards, column, dispatch,selectedProject }) => {
   const [active, setActive] = useState(false);
+  const profiles = useSelector((state) => state.profiles.profiles);
 
   const handleDragStart = (e, card) => {
     e.dataTransfer.setData("cardId", card.id);
@@ -88,7 +125,7 @@ const Column = ({ title, headingColor, cards, column, dispatch }) => {
 
   const handleDragEnd = (e) => {
     const cardId = Number(e.dataTransfer.getData("cardId"));
-    console.log(cardId, typeof cardId);
+   
 
     setActive(false);
     clearHighlights();
@@ -102,7 +139,7 @@ const Column = ({ title, headingColor, cards, column, dispatch }) => {
       let copy = [...cards];
 
       let cardToTransfer = copy.find((c) => c.id === cardId);
-      console.log(cardToTransfer);
+     
 
       if (!cardToTransfer) return;
       cardToTransfer = { ...cardToTransfer, column };
@@ -112,13 +149,12 @@ const Column = ({ title, headingColor, cards, column, dispatch }) => {
       const moveToBack = before === "-1";
 
       if (moveToBack) {
-        console.log("hello");
-        console.log(cardToTransfer);
+    
 
         copy.push(cardToTransfer);
-        console.log(copy);
+     
       } else {
-        console.log("here");
+     
 
         const insertAtIndex = copy.findIndex((el) => {
           return el.id === before;
@@ -128,7 +164,16 @@ const Column = ({ title, headingColor, cards, column, dispatch }) => {
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
 
-      console.log(copy);
+  
+      const updatedCopy = copy.map((item) => {
+        const profile = profiles.find(
+          (profile) => profile.fullName === item.assignedTo
+        );
+        return {
+          ...item,
+          assignedTo: profile ? profile.userId : item.assignedTo,
+        };
+      });
 
       fetch("https://tech-voyage-express-js.vercel.app/api/tasks/", {
         method: "PUT",
@@ -136,7 +181,7 @@ const Column = ({ title, headingColor, cards, column, dispatch }) => {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({ tasks: copy }),
+        body: JSON.stringify({ tasks: updatedCopy }),
       })
         .then((res) => {
           if (res.ok) {
@@ -234,7 +279,7 @@ const Column = ({ title, headingColor, cards, column, dispatch }) => {
           return <Card key={c.id} {...c} handleDragStart={handleDragStart} />;
         })}
         <DropIndicator beforeId={null} column={column} />
-        <AddCard column={column} dispatch={dispatch} />
+        <AddCard column={column} dispatch={dispatch} selectedProject={selectedProject} />
       </div>
     </div>
   );
@@ -290,7 +335,7 @@ const BurnBarrel = ({ dispatch }) => {
       method: "DELETE",
     })
       .then(() => {
-        console.log(cardId);
+    
 
         dispatch(deleteTask(cardId));
         setActive(false);
@@ -316,7 +361,7 @@ const BurnBarrel = ({ dispatch }) => {
   );
 };
 
-const AddCard = ({ column, dispatch }) => {
+const AddCard = ({ column, dispatch,selectedProject }) => {
   const theme = createTheme({
     components: {
       MuiPopover: {
@@ -400,7 +445,7 @@ const AddCard = ({ column, dispatch }) => {
   const [adding, setAdding] = useState(false);
   const [assignedTo, setAssignedTo] = useState(""); // New state for assigned user
   const members = useSelector((state) => state.profiles.profiles);
-  const [dueDate, setDueDate] = React.useState(dayjs("2022-04-17"));
+  const [dueDate, setDueDate] = React.useState(dayjs("2024-10-20"));
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -410,9 +455,11 @@ const AddCard = ({ column, dispatch }) => {
       column,
       title: text.trim(),
 
-      assignedTo,
+      assignedTo: parseInt(assignedTo),
       dueDate: dueDate.format("YYYY-MM-DD"), // Include due date
+      projectId:parseInt(selectedProject)
     };
+   
 
     fetch(`https://tech-voyage-express-js.vercel.app/api/tasks/`, {
       method: "POST",
@@ -430,7 +477,7 @@ const AddCard = ({ column, dispatch }) => {
         }
       })
       .then((data) => {
-        console.log(data.data);
+      
 
         dispatch(addTask(data?.data));
         setAdding(false);
@@ -461,11 +508,11 @@ const AddCard = ({ column, dispatch }) => {
             </option>
             {members.map((member) => (
               <option
-                key={member.user_id}
-                value={member.user_id}
+                key={member.userId}
+                value={member.userId}
                 className="text-black"
               >
-                {member.full_name}
+                {member.fullName}
               </option>
             ))}
           </select>

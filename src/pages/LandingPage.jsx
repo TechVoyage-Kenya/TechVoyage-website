@@ -33,6 +33,7 @@ export const LandingPage = () => {
       >
         <Content navigate={navigate} />
       </HeroSection>
+      
       <TechVoyageGrid/>
       <FeatureHighlights/>
     

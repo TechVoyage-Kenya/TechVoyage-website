@@ -4,10 +4,11 @@ import { motion } from 'framer-motion';
 const ProjectModal = ({ showModal, onClose, onSubmit, project }) => {
     const [formData, setFormData] = useState({
         title: '',
-        imageurl: '',
+        imageUrl: '',
         description: '',
-        livelink: '', // New state for live link
+        liveLink: '', // New state for live link
         category: '', // New state for category
+        public:''
     });
 
     useEffect(() => {
@@ -15,13 +16,14 @@ const ProjectModal = ({ showModal, onClose, onSubmit, project }) => {
             setFormData({
                 id:project.id || '',
                 title: project.title || '',
-                imageurl: project.imageurl || '',
+                imageUrl: project.imageUrl || '',
                 description: project.description || '',
-                livelink: project.livelink || '', // Initialize livelink if project exists
+                liveLink: project.liveLink || '', // Initialize liveLink if project exists
                 category: project.category || '', // Initialize category if project exists
+                public: project.public || '', 
             });
         } else {
-            setFormData({ title: '', imageurl: '', description: '', livelink: '', category: '' }); // Reset all fields
+            setFormData({ title: '', imageUrl: '', description: '', liveLink: '', category: '',public:'' }); // Reset all fields
         }
     }, [project]);
 
@@ -74,8 +76,8 @@ const ProjectModal = ({ showModal, onClose, onSubmit, project }) => {
                         <div className="mb-4">
                             <label className="block text-text text-sm font-bold mb-2">Image URL</label>
                             <input
-                                name="imageurl"
-                                value={formData.imageurl}
+                                name="imageUrl"
+                                value={formData.imageUrl}
                                 className="w-full px-3 py-2 border rounded text-black/50"
                                 required
                                 onChange={handleChange}
@@ -84,8 +86,8 @@ const ProjectModal = ({ showModal, onClose, onSubmit, project }) => {
                         <div className="mb-4">
                             <label className="block text-text text-sm font-bold mb-2">Live Link</label>
                             <input
-                                name="livelink"
-                                value={formData.livelink}
+                                name="liveLink"
+                                value={formData.liveLink}
                                 className="w-full px-3 py-2 border rounded text-black/50"
                                 required
                                 onChange={handleChange}
@@ -106,7 +108,23 @@ const ProjectModal = ({ showModal, onClose, onSubmit, project }) => {
                                 <option value="Website Development">Website Development</option>
                                 <option value="Content Management">Content Management</option>
                             </select>
+                           
                         </div>
+                        <div className="mb-4">
+                        <label className="block text-text text-sm font-bold mb-2">Visibility</label>
+                        <select
+                                name="public"
+                                value={formData.public}
+                                className="w-full px-3 py-2 border rounded text-black/50"
+                                required
+                                onChange={handleChange}
+                            >
+                                <option value="" disabled>Make public</option>
+                                <option value="false">False</option>
+                                <option value="true">True</option>
+                               
+                            </select>
+                            </div>
                         <div className="text-right">
                             <button type="button" onClick={onClose} className="bg-accent2 text-white px-4 py-2 rounded hover:bg-hover transition duration-300 mr-2">Cancel</button>
                             <button type="submit" className="bg-accent1 text-white px-4 py-2 rounded hover:bg-hover transition duration-300">
