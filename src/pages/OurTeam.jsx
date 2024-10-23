@@ -110,7 +110,7 @@ const Card = ({
           <img
             src={imageUrl}
             alt={member.fullName}
-            className={`w-full h-[300px] rounded-t-lg exclude-theme-toggle ${member.fullName === "Maxmillan Ng'ethe" ? 'object-cover' : 'object-cover'}`} 
+            className={`w-full h-[300px] rounded-t-lg exclude-theme-toggle ${member.fullName === "Maxmillan Ng'ethe" ? 'object-cover mt-5 sm:mt-0' : 'object-cover'}`} 
           />
           <div className="p-4 text-center exclude-theme-toggle">
             <h3 className="text-2xl font-semibold mb-1 exclude-theme-toggle">
