@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import withClick from '../components/common/flipCard';
 import ButtonNoBackground from '../components/common/Button-noBackground';
 import { usePageTitle } from '../utils/usePageTitle';
+import albert from "../assets/images/Albert.png"
+import max from "../assets/images/maxNew.png"
+import caleb from "../assets/images/calebNew.png"
+import brian from "../assets/images/BrianOmondi.png"
 
 
 const teamData = [
@@ -15,7 +19,7 @@ const teamData = [
     role: "Director, Founder & CTO Techvoyage",
     description: `With over five years of experience in software engineering across media agencies, telecommunications,edtech and financial services, Albert is well-equipped to address your technology needs. His diverse background has prepared him to expertly guide you through the complexities of technology and deliver effective solutions tailored to your requirements`,
 
-    imageUrl: "/images/sarah-connor.jpg",
+    imageUrl: albert,
     linkedin: "https://www.linkedin.com/in/albert-ondicho/",
     twitter: "https://x.com/ondicho_albert",
     github: "https://github.com/ondicho",
@@ -25,7 +29,7 @@ const teamData = [
     name: "Caleb Fundi",
     role: "Software Engineeer TechVoyage",
     description: `Caleb is currently pursuing a Bachelor's in Computer Science at Zetech University, having recently completed his diploma. Alongside his studies, he thrives as a software engineer at TechVoyage, where he brings ideas to life using Django for innovative software and web development. With hands-on experience in Python, particularly in artificial intelligence, he is equipped to build intelligent, dynamic applications that push the boundaries of technology.`,
-    imageUrl: "/images/hermione-granger.jpg",
+    imageUrl: caleb,
     linkedin: "https://www.linkedin.com/in/caleb-fundi-115a34298/",
   
     github: "https://github.com/calemaley",
@@ -35,10 +39,11 @@ const teamData = [
     name: "Brian Omondi",
     role: "Full-stack Developer",
     description: `Brian is a dynamic full-stack software developer with a wealth of experience in creating scalable applications. He focuses on delivering innovative, user-centric solutions that effectively tackle business, organization and individual challenges. With a dedication to quality and efficiency, he ensures that every project meets and exceeds client expectations.`,
-    imageUrl: "/images/john-snow.jpg",
-    linkedin: "www.linkedin.com/in/brian-omondi-1603529a/",
+    imageUrl: brian,
+    linkedin: "https://www.linkedin.com/in/brian-omondi-1603529a/",
  
     github: "https://github.com/brianhilsden",
+    website:"https://brian-omondi.vercel.app/"
   },
 
   {
@@ -46,13 +51,12 @@ const teamData = [
     name: "Maxmillan Ng'ethe",
     role: "Graphic designer",
     description: `Max is passionate in what he does having experience in  Graphic design, Animation and Web design. He's competent in logo design and Business card designs he is a self driven partner striving for growth to achieve better`,
-    imageUrl: "/images/harry-potter.jpg",
+    imageUrl: max,
     linkedin: "https://www.linkedin.com/in/max-n-7324b8333/",
     instagram:"https://www.instagram.com/lil_maxsy/profilecard/?igsh=Nmk2MTBhdnUxcjFv ",
   
   },
 ];
-
 
 
 
@@ -70,27 +74,27 @@ const Card = ({ variant, style, member }) => {
       {variant === "Front" ? (
         <>
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Placeholder_Person.jpg"
+            src={member.imageUrl}
             alt={member.name}
-            className="w-full h-48 object-cover rounded-t-lg exclude-theme-toggle"
+            className={`w-full h-[300px] rounded-t-lg exclude-theme-toggle ${member.id === 4 ? 'object-cover' : 'object-cover'}`} 
           />
+
           <div className="p-4 text-center exclude-theme-toggle">
             <h3 className="text-2xl font-semibold mb-1 exclude-theme-toggle">{member.name}</h3>
             <p className="text-md text-neutral-500 exclude-theme-toggle">{member.role}</p>
- 
-            <div className='flex justify-center items-center'>
-            <ButtonNoBackground text="Flip Card" />
-            <FiArrowRight/>
-            </div>
 
+            <div className='flex justify-center items-center'>
+              <ButtonNoBackground text="Flip Card" />
+              <FiArrowRight/>
+            </div>
           </div>
         </>
       ) : (
         <div className="p-4 text-center exclude-theme-toggle">
           <h3 className="text-2xl font-semibold mb-1 exclude-theme-toggle">{member.name}</h3>
           <p className="text-md mb-4 exclude-theme-toggle">{member.description}</p>
-        
-          <div className="flex gap-4 justify-center exclude-theme-toggle">
+
+          <div className="flex gap-4 justify-center exclude-theme-toggle items-center">
             {member.linkedin && <motion.a
               href={member.linkedin}
               target="_blank"
@@ -100,7 +104,7 @@ const Card = ({ variant, style, member }) => {
             >
               <FiLinkedin size={24} />
             </motion.a>}
-           {member.twitter && <motion.a
+            {member.twitter && <motion.a
               href={member.twitter}
               target="_blank"
               rel="noopener noreferrer"
@@ -109,7 +113,7 @@ const Card = ({ variant, style, member }) => {
             >
               <FiTwitter size={24} />
             </motion.a>}
-            {member.instagram &&<motion.a
+            {member.instagram && <motion.a
               href={member.instagram}
               target="_blank"
               rel="noopener noreferrer"
@@ -118,7 +122,7 @@ const Card = ({ variant, style, member }) => {
             >
               <FiInstagram size={24} />
             </motion.a>}
-           {member.github && <motion.a
+            {member.github && <motion.a
               href={member.github}
               target="_blank"
               rel="noopener noreferrer"
@@ -127,17 +131,35 @@ const Card = ({ variant, style, member }) => {
             >
               <FiGithub size={24} />
             </motion.a>}
-            
+
+            {member.website && (
+              <motion.a
+                href={member.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2 }}
+                className="text-primary exclude-theme-toggle flex items-center justify-center"
+                title="Personal website"
+              >
+                <img
+                  src={member.name === "Brian Omondi" && "https://brian-omondi.vercel.app/_next/image?url=%2Fimages%2FofficialLogo.png&w=96&q=75"}
+                  width={35}
+                  height={35}
+                  alt="website logo"
+                />
+              </motion.a>
+            )}
           </div>
           <div className='flex justify-center items-center'>
             <ButtonNoBackground text="Flip Card" />
             <FiArrowRight/>
-            </div>
+          </div>
         </div>
       )}
     </motion.div>
   );
 };
+
 const EnhancedCard = withClick(Card);
 
 const OurTeamPage = () => {
